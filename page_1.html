@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>What is AI?</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: 'Inter', sans-serif;
+        background-color: #0f172a;
+        color: #e2e8f0;
+    }
+    .slide-container {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        background-color: #0f172a;
+        display: flex;
+        flex-direction: column;
+        padding: 40px 60px;
+        box-sizing: border-box;
+    }
+    
+    /* Decorative faint grid lines for tech feel */
+    .grid-lines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: 40px 40px;
+        background-image: 
+            linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        z-index: 0;
+        pointer-events: none;
+    }
+    
+    .content-wrapper {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex: 1;
+        gap: 60px;
+        height: 100%;
+        align-items: center;
+        margin-top: 10px;
+    }
+    
+    .left-col {
+        flex: 0 0 45%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .right-col {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        background-color: rgba(30, 41, 59, 0.4);
+        border-radius: 24px;
+        border: 1px solid rgba(255,255,255,0.05);
+        height: 75%;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 48px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0;
+        position: relative;
+        z-index: 10;
+    }
+    
+    h1::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 6px;
+        background-color: #3b82f6;
+        margin-top: 10px;
+        border-radius: 3px;
+    }
+
+    .definition-box {
+        background-color: rgba(59, 130, 246, 0.1);
+        border-left: 5px solid #3b82f6;
+        padding: 24px;
+        border-radius: 0 12px 12px 0;
+        margin-bottom: 40px;
+        margin-top: 30px;
+    }
+
+    .definition-text {
+        font-size: 22px;
+        line-height: 1.5;
+        color: #f8fafc;
+        font-weight: 400;
+        margin: 0;
+    }
+
+    .section-label {
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px; 
+        color: #94a3b8; 
+        margin-bottom: 20px; 
+        font-weight: 600; 
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+    }
+    
+    .section-label::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background-color: rgba(148, 163, 184, 0.3);
+        margin-left: 15px;
+    }
+
+    .abilities-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .ability-card {
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 16px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.2s;
+    }
+    
+    .ability-icon {
+        width: 48px;
+        height: 48px;
+        background-color: rgba(139, 92, 246, 0.15);
+        color: #a78bfa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .ability-content h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .ability-content p {
+        margin: 4px 0 0 0;
+        font-size: 14px;
+        color: #cbd5e1;
+    }
+
+    canvas {
+        width: 100%;
+        height: 100%;
+        border-radius: 24px;
+    }
+    
+    /* Simple legend for the diagram */
+    .diagram-label {
+        position: absolute;
+        bottom: 20px;
+        right: 30px;
+        font-size: 12px;
+        color: #64748b;
+        background: rgba(0,0,0,0.3);
+        padding: 5px 10px;
+        border-radius: 4px;
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+<div class="grid-lines"></div>
+<h1>What is AI?</h1>
+<div class="content-wrapper">
+<!-- Left Column: Text -->
+<div class="left-col">
+<div class="definition-box">
+<p class="definition-text">
+<strong>Artificial Intelligence (AI)</strong> is software that learns from data to perform tasks that typically require human intelligence.
+                </p>
+</div>
+<div class="section-label">Core Abilities</div>
+<div class="abilities-grid">
+<div class="ability-card">
+<div class="ability-icon"><i class="fas fa-eye"></i></div>
+<div class="ability-content">
+<h3>Perceive</h3>
+<p>See images &amp; text</p>
+</div>
+</div>
+<div class="ability-card">
+<div class="ability-icon"><i class="fas fa-brain"></i></div>
+<div class="ability-content">
+<h3>Reason</h3>
+<p>Analyze &amp; decide</p>
+</div>
+</div>
+<div class="ability-card">
+<div class="ability-icon"><i class="fas fa-chart-line"></i></div>
+<div class="ability-content">
+<h3>Learn</h3>
+<p>Improve with data</p>
+</div>
+</div>
+<div class="ability-card">
+<div class="ability-icon"><i class="fas fa-robot"></i></div>
+<div class="ability-content">
+<h3>Act</h3>
+<p>Assist or automate</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Visual Diagram -->
+<div class="right-col">
+<canvas id="aiPipelineCanvas"></canvas>
+<div class="diagram-label">Basic AI Workflow</div>
+</div>
+</div>
+</div>
+<script>
+    const canvas = document.getElementById('aiPipelineCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Handle High DPI displays
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+
+    const width = rect.width;
+    const height = rect.height;
+
+    // Design Tokens
+    const colors = {
+        input: '#3b82f6',   // Blue
+        model: '#8b5cf6',   // Purple
+        output: '#10b981',  // Emerald
+        line: '#475569',    // Slate line
+        bg: '#1e293b'       // Dark Slate Node Bg
+    };
+
+    function drawPipeline(offset) {
+        ctx.clearRect(0, 0, width, height);
+
+        const centerY = height / 2;
+        const inputX = width * 0.2;
+        const modelX = width * 0.5;
+        const outputX = width * 0.8;
+        
+        // Dynamic radii for "breathing" effect on the main model
+        const modelRadius = 65 + Math.sin(offset * 0.1) * 2;
+        const nodeRadius = 50;
+
+        // --- 1. Draw Connection Lines ---
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = colors.line;
+        ctx.setLineDash([6, 6]); // Dashed flow lines
+
+        // Line 1: Input -> Model
+        ctx.beginPath();
+        ctx.moveTo(inputX + nodeRadius + 15, centerY);
+        ctx.lineTo(modelX - modelRadius - 15, centerY);
+        ctx.stroke();
+
+        // Line 2: Model -> Output
+        ctx.beginPath();
+        ctx.moveTo(modelX + modelRadius + 15, centerY);
+        ctx.lineTo(outputX - nodeRadius - 15, centerY);
+        ctx.stroke();
+
+        ctx.setLineDash([]); // Reset dash
+
+        // --- 2. Draw Nodes ---
+        drawNode(inputX, centerY, nodeRadius, 'Data', 'Input', colors.input, 'db');
+        drawNode(modelX, centerY, modelRadius, 'AI Model', 'Processing', colors.model, 'gear');
+        drawNode(outputX, centerY, nodeRadius, 'Result', 'Output', colors.output, 'bulb');
+
+        // --- 3. Animated Data Particles ---
+        drawParticles(inputX + nodeRadius + 15, centerY, modelX - modelRadius - 15, offset, colors.input);
+        drawParticles(modelX + modelRadius + 15, centerY, outputX - nodeRadius - 15, offset, colors.output);
+    }
+
+    function drawNode(x, y, r, title, subtitle, color, iconType) {
+        // Shadow glow
+        ctx.shadowBlur = 25;
+        ctx.shadowColor = color;
+        
+        // Circle background
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.fillStyle = colors.bg;
+        ctx.fill();
+        
+        // Border
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        
+        ctx.shadowBlur = 0; // Reset shadow
+
+        // Inner Icon Representation (Geometric)
+        ctx.fillStyle = color;
+        if (iconType === 'db') {
+            // Stacked disks
+            ctx.fillRect(x - 12, y - 18, 24, 6);
+            ctx.fillRect(x - 12, y - 8, 24, 6);
+            ctx.fillRect(x - 12, y + 2, 24, 6);
+        } else if (iconType === 'gear') {
+            // Brain/Chip center
+            ctx.fillRect(x - 14, y - 14, 28, 28);
+            ctx.clearRect(x - 6, y - 6, 12, 12);
+        } else if (iconType === 'bulb') {
+            // Lightbulb shape
+            ctx.beginPath();
+            ctx.arc(x, y - 4, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillRect(x - 6, y + 6, 12, 6);
+        }
+
+        // Text Labels
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 16px Poppins';
+        ctx.fillText(title, x, y + r + 28);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '13px Inter';
+        ctx.fillText(subtitle, x, y + r + 46);
+    }
+
+    function drawParticles(startX, y, endX, offset, color) {
+        const distance = endX - startX;
+        const particleCount = 3;
+        
+        ctx.fillStyle = color;
+        for(let i = 0; i < particleCount; i++) {
+            // Calculate progress (0 to 1)
+            let progress = ((offset * 0.02) + (i / particleCount)) % 1;
+            let currentX = startX + (distance * progress);
+            
+            ctx.beginPath();
+            ctx.arc(currentX, y, 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    // Animation Loop
+    let animationOffset = 0;
+    function animate() {
+        animationOffset++;
+        drawPipeline(animationOffset);
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
+</body>
+</html>
