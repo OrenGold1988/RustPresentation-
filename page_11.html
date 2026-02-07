@@ -1,193 +1,338 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=1280, height=720" name="viewport"/>
 <title>Pros of Using Rust on the Host Side</title>
+
+<!-- CSS dependencies -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
 <style>
+    :root {
+        --bg:#0f172a;
+        --green:#10b981;
+        --blue:#3b82f6;
+        --text:#ffffff;
+        --muted:#cbd5e1;
+        --bottom-nav-height: 68px;
+        --bottom-padding-extra: 20px;
+    }
+
+    html, body { height: 100%; }
     body {
         margin: 0;
         padding: 0;
         font-family: 'Inter', sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
         overflow: hidden;
     }
+
     .slide-container {
-        width: 100vw;   /* full viewport width */
-        height: 100vh;  /* full viewport height */
-        background-color: #0f172a;
+        width: 100vw;
+        height: 100vh;
         display: flex;
         flex-direction: column;
         position: relative;
         overflow: hidden;
+        isolation: isolate;
     }
+
     .header {
         padding: 40px 80px 25px 80px;
         border-bottom: 2px solid rgba(16, 185, 129, 0.4);
+        position: relative;
+        z-index: 2;
     }
+
     .slide-title {
         font-size: 44px;
-        font-weight: 700;
-        color: #ffffff;
+        font-weight: 800;
         margin: 0;
+        color: var(--text);
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+
+        /* animation */
+        opacity: 0;
+        transform: translateY(-8px);
+        animation: fadeInDown 700ms ease-out forwards 120ms;
+        text-wrap: balance;
     }
-    .title-highlight {
-        color: #10b981;
-    }
+    .title-highlight { color: var(--green); }
+
     .content-wrapper {
         flex: 1;
-        padding: 45px 80px 55px 80px;
+        padding: 40px 80px calc(var(--bottom-nav-height) + var(--bottom-padding-extra));
         display: flex;
         flex-direction: column;
         justify-content: center;
+        gap: 22px;
+        overflow: hidden;
+        position: relative;
+        z-index: 2;
+        box-sizing: border-box;
     }
+
     .checklist-container {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 18px;
     }
+
     .checklist-item {
         display: flex;
-        align-items: flex-start;
-        gap: 22px;
-        background-color: rgba(16, 185, 129, 0.08);
-        border: 1px solid rgba(16, 185, 129, 0.3);
+        gap: 20px;
+        background-color: rgba(16,185,129,0.08);
+        border: 1px solid rgba(16,185,129,0.3);
         border-radius: 10px;
-        padding: 20px 28px;
-        transition: all 0.2s ease;
+        padding: 18px 24px;
+        box-shadow: 0 10px 26px rgba(0,0,0,0.16);
+
+        /* entrance */
+        opacity: 0;
+        transform: translateY(12px);
     }
+    /* Stagger each item */
+    .checklist-item:nth-child(1){ animation: fadeUp 600ms ease-out forwards 180ms; }
+    .checklist-item:nth-child(2){ animation: fadeUp 600ms ease-out forwards 260ms; }
+    .checklist-item:nth-child(3){ animation: fadeUp 600ms ease-out forwards 340ms; }
+    .checklist-item:nth-child(4){ animation: fadeUp 600ms ease-out forwards 420ms; }
+    .checklist-item:nth-child(5){ animation: fadeUp 600ms ease-out forwards 500ms; }
+
     .check-icon-box {
         width: 48px;
         height: 48px;
-        background-color: rgba(16, 185, 129, 0.2);
-        border: 2px solid rgba(16, 185, 129, 0.5);
+        background-color: rgba(16,185,129,0.2);
+        border: 2px solid rgba(16,185,129,0.5);
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
     }
+
     .check-icon-box i {
-        color: #10b981;
         font-size: 22px;
+        color: var(--green);
     }
-    .checklist-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 4px;
-    }
+
     .checklist-title {
-        font-size: 22px;
+        font-size: 21px;
+        color: var(--text);
+        margin: 0;
         font-weight: 700;
-        color: #ffffff;
-        margin: 0;
-        line-height: 1.3;
     }
+
     .checklist-description {
-        font-size: 16px;
-        color: #cbd5e1;
+        font-size: 15px;
+        color: var(--muted);
         margin: 0;
-        line-height: 1.4;
-        font-weight: 400;
+        line-height: 1.45;
     }
+
     .highlight-text {
-        color: #6ee7b7;
         font-weight: 600;
+        color: #6ee7b7;
     }
+
+    /* Decorative circles — gentle floating */
     .decorative-element {
         position: absolute;
         border-radius: 50%;
-        opacity: 0.04;
+        opacity: 0.05;
         z-index: 0;
+        pointer-events: none;
+        will-change: transform, opacity;
+        filter: blur(0.2px);
     }
     .circle-1 {
         width: 350px;
         height: 350px;
-        background-color: #10b981;
+        background-color: var(--green);
         top: -100px;
         right: -80px;
+        animation: floatRight 18s ease-in-out infinite;
     }
     .circle-2 {
         width: 250px;
         height: 250px;
-        background-color: #3b82f6;
+        background-color: var(--blue);
         bottom: -80px;
         left: -60px;
+        animation: floatLeft 20s ease-in-out infinite;
+    }
+
+    /* Bottom navigation */
+    .bottom-nav {
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        height: var(--bottom-nav-height);
+        padding: 12px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(180deg,
+            rgba(15,23,42,0) 0%,
+            rgba(15,23,42,0.65) 50%,
+            rgba(15,23,42,0.95) 100%
+        );
+        z-index: 3;
+        box-sizing: border-box;
+    }
+
+    .nav-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 18px;
+        border-radius: 9999px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        color: #ffffff;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        white-space: nowrap;
+
+        /* hover lift */
+        transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
+    }
+
+    .nav-prev { background-color: #4b5563; }
+    .nav-prev:hover { background-color: #374151; transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 14px 28px rgba(0,0,0,0.35); }
+    .nav-next { background-color: #2563eb; }
+    .nav-next:hover { background-color: #1d4ed8; transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 14px 28px rgba(0,0,0,0.35); }
+
+    /* Keyframes */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-10px) scale(0.995); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes floatRight {
+        0%   { transform: translate(0, 0) scale(1); }
+        50%  { transform: translate(-14px, 10px) scale(1.03); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes floatLeft {
+        0%   { transform: translate(0, 0) scale(1); }
+        50%  { transform: translate(14px, -10px) scale(1.03); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+        .slide-title, .checklist-item { opacity: 1 !important; transform: none !important; }
     }
 </style>
 </head>
+
 <body>
 <div class="slide-container">
-<div class="decorative-element circle-1"></div>
-<div class="decorative-element circle-2"></div>
-<div class="header">
-<h1 class="slide-title"><p><span class="title-highlight">Pros</span> of Using Rust on the Host Side</p></h1>
-</div>
-<div class="content-wrapper">
-<div class="checklist-container">
-<div class="checklist-item">
-<div class="check-icon-box">
-<i class="fas fa-check-circle"></i>
-</div>
-<div class="checklist-content">
-<h3 class="checklist-title"><p>Memory Safety by Default</p></h3>
-<p class="checklist-description">Prevents <span class="highlight-text">buffer overflows</span> and <span class="highlight-text">use-after-free bugs</span> at compile time through ownership system</p>
-</div>
-</div>
-<div class="checklist-item">
-<div class="check-icon-box">
-<i class="fas fa-check-circle"></i>
-</div>
-<div class="checklist-content">
-<h3 class="checklist-title"><p>Safer Concurrency</p></h3>
-<p class="checklist-description"><span class="highlight-text">Send/Sync discipline</span> and compile-time checks ensure <span class="highlight-text">data-race freedom</span> in multi-threaded code</p>
-</div>
-</div>
-<div class="checklist-item">
-<div class="check-icon-box">
-<i class="fas fa-check-circle"></i>
-</div>
-<div class="checklist-content">
-<h3 class="checklist-title"><p>Clear, Expressive APIs</p></h3>
-<p class="checklist-description"><span class="highlight-text">Strong type system</span> and modern error handling with Result/Option types create self-documenting, reliable interfaces</p>
-</div>
-</div>
-<div class="checklist-item">
-<div class="check-icon-box">
-<i class="fas fa-check-circle"></i>
-</div>
-<div class="checklist-content">
-<h3 class="checklist-title"><p>Performance Comparable to C/C++</p></h3>
-<p class="checklist-description"><span class="highlight-text">Zero-cost abstractions</span> and LLVM-based optimization with LTO deliver native performance without runtime overhead</p>
-</div>
-</div>
-<div class="checklist-item">
-<div class="check-icon-box">
-<i class="fas fa-check-circle"></i>
-</div>
-<div class="checklist-content">
-<h3 class="checklist-title"><p>Robust Ecosystem</p></h3>
-<p class="checklist-description">Mature libraries for <span class="highlight-text">protocol parsing, serialization, and IPC</span> with strong community support</p>
-</div>
-<div class="navigation-buttons mt-10 flex justify-between w-full">
-  <a href="page_10.html"
-     class="inline-block px-8 py-3 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-lg font-semibold shadow-lg transition">
-    ← Previous Slide
-  </a>
 
-  <a href="page_12.html"
-     class="inline-block px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold shadow-lg transition">
-    Next Slide →
-  </a>
-</div>
-</div>
-</div>
-</div>
+    <div class="decorative-element circle-1"></div>
+    <div class="decorative-element circle-2"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <h1 class="slide-title">
+            <span class="title-highlight">Pros</span><br>
+            of Using Rust on the Host Side
+        </h1>
+    </div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+        <div class="checklist-container">
+
+            <div class="checklist-item">
+                <div class="check-icon-box">
+                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                </div>
+                <div class="checklist-content">
+                    <h3 class="checklist-title">Memory Safety by Default</h3>
+                    <p class="checklist-description">
+                        Prevents <span class="highlight-text">buffer overflows</span> and
+                        <span class="highlight-text">use-after-free bugs</span> at compile time through the ownership system
+                    </p>
+                </div>
+            </div>
+
+            <div class="checklist-item">
+                <div class="check-icon-box">
+                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                </div>
+                <div class="checklist-content">
+                    <h3 class="checklist-title">Safer Concurrency</h3>
+                    <p class="checklist-description">
+                        <span class="highlight-text">Send/Sync discipline</span> and compile-time checks ensure
+                        <span class="highlight-text">data-race freedom</span> in multi-threaded code
+                    </p>
+                </div>
+            </div>
+
+            <div class="checklist-item">
+                <div class="check-icon-box">
+                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                </div>
+                <div class="checklist-content">
+                    <h3 class="checklist-title">Clear, Expressive APIs</h3>
+                    <p class="checklist-description">
+                        <span class="highlight-text">Strong type system</span> and modern error handling with Result/Option
+                        types create highly reliable interfaces
+                    </p>
+                </div>
+            </div>
+
+            <div class="checklist-item">
+                <div class="check-icon-box">
+                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                </div>
+                <div class="checklist-content">
+                    <h3 class="checklist-title">Performance Comparable to C/C++</h3>
+                    <p class="checklist-description">
+                        <span class="highlight-text">Zero-cost abstractions</span> plus LLVM optimizations (LTO) provide
+                        native performance without runtime overhead
+                    </p>
+                </div>
+            </div>
+
+            <div class="checklist-item">
+                <div class="check-icon-box">
+                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                </div>
+                <div class="checklist-content">
+                    <h3 class="checklist-title">Robust Ecosystem</h3>
+                    <p class="checklist-description">
+                        Extensive crates for <span class="highlight-text">protocol parsing, serialization, and IPC</span>
+                        backed by a strong community
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+  <!-- Bottom-fixed navigation -->
+  <div class="bottom-nav">
+    <a class="nav-btn nav-prev" href="page_9.html" aria-label="Previous Slide">
+      <i class="fas fa-arrow-left" aria-hidden="true"></i>
+      <span>Previous Slide</span>
+    </a>
+
+    <a class="nav-btn nav-next" href="page_11.html" aria-label="Next Slide">
+      <span>Next Slide</span>
+      <i class="fas fa-arrow-right" aria-hidden="true"></i>
+    </a>
+  </div>
 </div>
 </body>
 </html>

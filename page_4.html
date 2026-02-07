@@ -1,42 +1,67 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=1280, height=720" name="viewport"/>
 <title>Where OpenTitan Fits in the System</title>
+
+<!-- Dependencies -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
 <style>
+    :root{
+        --bg:#0f172a;
+        --blue:#3b82f6;
+        --green:#10b981;
+        --violet:#8b5cf6;
+        --slate:#94a3b8;
+        --text:#ffffff;
+        --muted:#cbd5e1;
+    }
+
+    html, body { height: 100%; }
     body {
         margin: 0;
         padding: 0;
         font-family: 'Inter', sans-serif;
         overflow: hidden;
+        background-color: var(--bg);
+        color: var(--text);
     }
+
     .slide-container {
-        width: 100vw;   /* full viewport width */
-        height: 100vh;  /* full viewport height */
-        background-color: #0f172a;
+        width: 100vw;
+        height: 100vh;
+        background-color: var(--bg);
         display: flex;
         flex-direction: column;
         position: relative;
         overflow: hidden;
+        isolation: isolate;
     }
+
     .header {
         padding: 40px 80px 25px 80px;
         border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        position: relative;
+        z-index: 2;
     }
     .slide-title {
-        font-size: 44px;
-        font-weight: 700;
+        font-size: 30px;
+        font-weight: 800;
         color: #ffffff;
         margin: 0;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        opacity: 0;
+        transform: translateY(-8px);
+        animation: fadeInDown 700ms ease-out forwards 120ms;
+        text-wrap: balance;
     }
-    .title-highlight {
-        color: #3b82f6;
-    }
+    .title-highlight { color: var(--blue); }
+
     .content-wrapper {
         flex: 1;
         padding: 40px 80px 50px 80px;
@@ -45,13 +70,16 @@
         justify-content: center;
         position: relative;
         z-index: 2;
+        gap: 18px;
     }
+
     .architecture-container {
         display: flex;
         gap: 40px;
-        align-items: center;
+        align-items: stretch;
         justify-content: space-between;
     }
+
     .component-box {
         flex: 1;
         border-radius: 12px;
@@ -60,15 +88,23 @@
         flex-direction: column;
         gap: 16px;
         position: relative;
+
+        /* Entrance */
+        opacity: 0;
+        transform: translateY(12px);
+        box-shadow: 0 10px 26px rgba(0,0,0,0.18);
     }
     .host-box {
         background-color: rgba(100, 116, 139, 0.15);
         border: 2px solid rgba(100, 116, 139, 0.4);
+        animation: fadeUp 650ms ease-out forwards 220ms;
     }
     .opentitan-box {
         background-color: rgba(59, 130, 246, 0.15);
         border: 2px solid rgba(59, 130, 246, 0.5);
+        animation: fadeUp 650ms ease-out forwards 380ms;
     }
+
     .component-header {
         display: flex;
         align-items: center;
@@ -82,13 +118,14 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
     }
     .host-icon {
         background-color: rgba(100, 116, 139, 0.3);
         border: 2px solid rgba(100, 116, 139, 0.6);
     }
     .host-icon i {
-        color: #94a3b8;
+        color: var(--slate);
         font-size: 22px;
     }
     .opentitan-icon {
@@ -96,9 +133,10 @@
         border: 2px solid rgba(59, 130, 246, 0.7);
     }
     .opentitan-icon i {
-        color: #3b82f6;
+        color: var(--blue);
         font-size: 22px;
     }
+
     .component-title {
         font-size: 24px;
         font-weight: 700;
@@ -111,6 +149,7 @@
         padding: 4px 12px;
         border-radius: 4px;
         display: inline-block;
+        margin-top: 4px;
     }
     .host-subtitle {
         background-color: rgba(239, 68, 68, 0.2);
@@ -122,6 +161,7 @@
         border: 1px solid rgba(16, 185, 129, 0.4);
         color: #6ee7b7;
     }
+
     .component-list {
         display: flex;
         flex-direction: column;
@@ -134,17 +174,24 @@
         font-size: 15px;
         color: #cbd5e1;
         line-height: 1.4;
+
+        opacity: 0;
+        transform: translateY(8px);
     }
+    /* Subtle stagger for list items inside each box */
+    .component-box .list-item:nth-child(1){ animation: fadeUp 500ms ease-out forwards 260ms; }
+    .component-box .list-item:nth-child(2){ animation: fadeUp 500ms ease-out forwards 320ms; }
+    .component-box .list-item:nth-child(3){ animation: fadeUp 500ms ease-out forwards 380ms; }
+    .component-box .list-item:nth-child(4){ animation: fadeUp 500ms ease-out forwards 440ms; }
+
     .list-item i {
         font-size: 12px;
         width: 16px;
     }
-    .host-item i {
-        color: #94a3b8;
-    }
-    .opentitan-item i {
-        color: #3b82f6;
-    }
+    .host-item i { color: var(--slate); }
+    .opentitan-item i { color: var(--blue); }
+
+    /* Communication column */
     .communication-section {
         display: flex;
         flex-direction: column;
@@ -153,23 +200,34 @@
         gap: 16px;
         position: relative;
         min-width: 200px;
+
+        opacity: 0;
+        transform: translateY(12px);
+        animation: fadeUp 650ms ease-out forwards 300ms;
     }
+
+    /* Arrows with animated dash to suggest flow */
     .arrow-container {
         display: flex;
         flex-direction: column;
         gap: 10px;
         align-items: center;
     }
-    .arrow-right {
+    .arrow-right, .arrow-left {
         display: flex;
         align-items: center;
         gap: 8px;
     }
-    .arrow-line {
+
+    .arrow-line, .arrow-line-left {
         width: 80px;
         height: 2px;
-        background-color: #64748b;
         position: relative;
+    }
+
+    .arrow-line {
+        background: linear-gradient(90deg, rgba(100,116,139,0.3) 0%, #64748b 60%, rgba(100,116,139,0.3) 100%);
+        overflow: hidden;
     }
     .arrow-line::after {
         content: '';
@@ -182,16 +240,10 @@
         border-top: 5px solid transparent;
         border-bottom: 5px solid transparent;
     }
-    .arrow-left {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
+
     .arrow-line-left {
-        width: 80px;
-        height: 2px;
-        background-color: #3b82f6;
-        position: relative;
+        background: linear-gradient(90deg, rgba(59,130,246,0.3) 0%, #3b82f6 60%, rgba(59,130,246,0.3) 100%);
+        overflow: hidden;
     }
     .arrow-line-left::before {
         content: '';
@@ -204,20 +256,46 @@
         border-top: 5px solid transparent;
         border-bottom: 5px solid transparent;
     }
+
+    /* Animated shimmer sweeping inside the lines */
+    .arrow-line::before,
+    .arrow-line-left::after {
+        content: '';
+        position: absolute;
+        left: -40%;
+        top: 0;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+        animation: lineSweep 2.6s ease-in-out infinite;
+    }
+    .arrow-line-left::after {
+        right: -40%;
+        left: auto;
+        animation: lineSweepReverse 2.6s ease-in-out infinite;
+    }
+
     .arrow-label {
         font-size: 13px;
         font-weight: 600;
         color: #94a3b8;
+        opacity: 0;
+        transform: translateY(6px);
+        animation: fadeUp 500ms ease-out forwards 420ms;
     }
-    .arrow-label-response {
-        color: #60a5fa;
-    }
+    .arrow-label-response { color: #60a5fa; }
+
     .protocol-box {
         background-color: rgba(139, 92, 246, 0.15);
         border: 2px solid rgba(139, 92, 246, 0.4);
         border-radius: 8px;
         padding: 14px 18px;
         text-align: center;
+        box-shadow: 0 10px 26px rgba(0,0,0,0.16);
+
+        opacity: 0;
+        transform: translateY(10px);
+        animation: fadeUp 550ms ease-out forwards 420ms;
     }
     .protocol-title {
         font-size: 13px;
@@ -239,7 +317,15 @@
         font-size: 12px;
         font-weight: 600;
         color: #e9d5ff;
+
+        opacity: 0;
+        transform: scale(0.96) translateY(6px);
+        animation: popUp 420ms ease-out forwards;
     }
+    .protocol-tag:nth-child(1){ animation-delay: 460ms; }
+    .protocol-tag:nth-child(2){ animation-delay: 520ms; }
+    .protocol-tag:nth-child(3){ animation-delay: 580ms; }
+
     .security-note {
         background-color: rgba(16, 185, 129, 0.1);
         border: 1px solid rgba(16, 185, 129, 0.3);
@@ -249,6 +335,11 @@
         display: flex;
         align-items: center;
         gap: 12px;
+        box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+
+        opacity: 0;
+        transform: translateY(10px);
+        animation: fadeUp 650ms ease-out forwards 560ms;
     }
     .security-note i {
         color: #10b981;
@@ -260,132 +351,181 @@
         font-weight: 500;
         margin: 0;
     }
+
+    /* Decorative circles floating */
     .decorative-element {
         position: absolute;
         border-radius: 50%;
-        opacity: 0.04;
+        opacity: 0.05;
         z-index: 0;
+        pointer-events: none;
+        will-change: transform, opacity;
+        filter: blur(0.2px);
     }
     .circle-1 {
         width: 350px;
         height: 350px;
-        background-color: #3b82f6;
+        background-color: var(--blue);
         top: -100px;
         right: -80px;
+        animation: floatRight 18s ease-in-out infinite;
     }
     .circle-2 {
         width: 250px;
         height: 250px;
-        background-color: #8b5cf6;
+        background-color: var(--violet);
         bottom: -80px;
         left: -60px;
+        animation: floatLeft 20s ease-in-out infinite;
+    }
+
+    /* Buttons hover lift (keep existing anchors) */
+    .navigation-buttons a {
+        transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+    }
+    .navigation-buttons a:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.35);
+    }
+
+    /* Keyframes */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-10px) scale(0.995); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes floatRight {
+        0%   { transform: translate(0, 0) scale(1); }
+        50%  { transform: translate(-14px, 10px) scale(1.03); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes floatLeft {
+        0%   { transform: translate(0, 0) scale(1); }
+        50%  { transform: translate(14px, -10px) scale(1.03); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes lineSweep {
+        0%   { left: -40%; opacity: 0.0; }
+        20%  { opacity: 0.8; }
+        50%  { left: 40%; opacity: 0.9; }
+        80%  { opacity: 0.8; }
+        100% { left: 120%; opacity: 0.0; }
+    }
+    @keyframes lineSweepReverse {
+        0%   { right: -40%; opacity: 0.0; }
+        20%  { opacity: 0.8; }
+        50%  { right: 40%; opacity: 0.9; }
+        80%  { opacity: 0.8; }
+        100% { right: 120%; opacity: 0.0; }
+    }
+    @keyframes popUp {
+        from { opacity: 0; transform: scale(0.96) translateY(6px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Respect user motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+        .slide-title, .component-box, .list-item, .communication-section, .protocol-box, .security-note { opacity: 1 !important; transform: none !important; }
     }
 </style>
 </head>
 <body>
 <div class="slide-container">
-<div class="decorative-element circle-1"></div>
-<div class="decorative-element circle-2"></div>
-<div class="header">
-<h1 class="slide-title"><p>Where <span class="title-highlight">OpenTitan</span> Fits in the System</p></h1>
-</div>
-<div class="content-wrapper">
-<div class="architecture-container">
-<div class="component-box host-box">
-<div class="component-header">
-<div class="component-icon host-icon">
-<i class="fas fa-server"></i>
-</div>
-<div>
-<h2 class="component-title"><p>Host SoC</p></h2>
-<span class="component-subtitle host-subtitle"><p>Less Trusted</p></span>
-</div>
-</div>
-<div class="component-list">
-<div class="list-item host-item">
-<i class="fas fa-circle"></i>
-<p>Runs main application workloads</p>
-</div>
-<div class="list-item host-item">
-<i class="fas fa-circle"></i>
-<p>Requests security services via APIs</p>
-</div>
-<div class="list-item host-item">
-<i class="fas fa-circle"></i>
-<p>Cannot directly access secrets</p>
-</div>
-<div class="list-item host-item">
-<i class="fas fa-circle"></i>
-<p>Policy-enforced interactions only</p>
-</div>
-</div>
-</div>
-<div class="communication-section">
-<div class="arrow-container">
-<div class="arrow-right">
-<div class="arrow-line"></div>
-<span class="arrow-label"><p>Request</p></span>
-</div>
-<div class="arrow-left">
-<span class="arrow-label arrow-label-response"><p>Response</p></span>
-<div class="arrow-line-left"></div>
-</div>
-</div>
-<div class="protocol-box">
-<h3 class="protocol-title"><p>Communication</p></h3>
-<div class="protocol-list">
-<span class="protocol-tag"><p>SPI</p></span>
-<span class="protocol-tag"><p>I²C</p></span>
-<span class="protocol-tag"><p>UART</p></span>
-</div>
-</div>
-</div>
-<div class="component-box opentitan-box">
-<div class="component-header">
-<div class="component-icon opentitan-icon">
-<i class="fas fa-shield-alt"></i>
-</div>
-<div>
-<h2 class="component-title"><p>OpenTitan RoT</p></h2>
-<span class="component-subtitle opentitan-subtitle"><p>Highly Trusted</p></span>
-</div>
-</div>
-<div class="component-list">
-<div class="list-item opentitan-item">
-<i class="fas fa-check"></i>
-<p>Isolated security component</p>
-</div>
-<div class="list-item opentitan-item">
-<i class="fas fa-check"></i>
-<p>Enforces security policy decisions</p>
-</div>
-<div class="list-item opentitan-item">
-<i class="fas fa-check"></i>
-<p>Protects cryptographic secrets</p>
-</div>
-<div class="list-item opentitan-item">
-<i class="fas fa-check"></i>
-<p>Provides attested results only</p>
-</div>
-</div>
-</div>
-</div>
-<div class="security-note">
-<i class="fas fa-lock"></i>
-<p class="security-note-text">Clear separation reduces blast radius of host compromise — secrets remain inside the RoT</p>
-</div>
-<div class="navigation-buttons mt-10 flex justify-between w-full">
-  <a href="page_3.html"
-     class="inline-block px-8 py-3 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-lg font-semibold shadow-lg transition">
-    ← Previous Slide
-  </a>
+    <!-- Decorative circles -->
+    <div class="decorative-element circle-1"></div>
+    <div class="decorative-element circle-2"></div>
 
-  <a href="page_5.html"
-     class="inline-block px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold shadow-lg transition">
-    Next Slide →
-  </a>
-</div>
-</div>
+    <!-- Header -->
+    <div class="header">
+        <h1 class="slide-title">Where <span class="title-highlight">OpenTitan</span> Fits in the System</h1>
+    </div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+        <div class="architecture-container">
+            <!-- HOST -->
+            <div class="component-box host-box">
+                <div class="component-header">
+                    <div class="component-icon host-icon"><i class="fas fa-server" aria-hidden="true"></i></div>
+                    <div>
+                        <h2 class="component-title">Host SoC</h2>
+                        <span class="component-subtitle host-subtitle">Less Trusted</span>
+                    </div>
+                </div>
+
+                <div class="component-list">
+                    <div class="list-item host-item"><i class="fas fa-circle" aria-hidden="true"></i><span>Runs main application workloads</span></div>
+                    <div class="list-item host-item"><i class="fas fa-circle" aria-hidden="true"></i><span>Requests security services via APIs</span></div>
+                    <div class="list-item host-item"><i class="fas fa-circle" aria-hidden="true"></i><span>Cannot directly access secrets</span></div>
+                    <div class="list-item host-item"><i class="fas fa-circle" aria-hidden="true"></i><span>Policy-enforced interactions only</span></div>
+                </div>
+            </div>
+
+            <!-- COMMUNICATION + PROTOCOLS -->
+            <div class="communication-section">
+                <div class="arrow-container">
+                    <div class="arrow-right">
+                        <div class="arrow-line"></div>
+                        <span class="arrow-label">Request</span>
+                    </div>
+                    <div class="arrow-left">
+                        <span class="arrow-label arrow-label-response">Response</span>
+                        <div class="arrow-line-left"></div>
+                    </div>
+                </div>
+
+                <div class="protocol-box">
+                    <h3 class="protocol-title">Communication</h3>
+                    <div class="protocol-list">
+                        <span class="protocol-tag">SPI</span>
+                        <span class="protocol-tag">I²C</span>
+                        <span class="protocol-tag">UART</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPENTITAN -->
+            <div class="component-box opentitan-box">
+                <div class="component-header">
+                    <div class="component-icon opentitan-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></div>
+                    <div>
+                        <h2 class="component-title">OpenTitan RoT</h2>
+                        <span class="component-subtitle opentitan-subtitle">Highly Trusted</span>
+                    </div>
+                </div>
+
+                <div class="component-list">
+                    <div class="list-item opentitan-item"><i class="fas fa-check" aria-hidden="true"></i><span>Isolated security component</span></div>
+                    <div class="list-item opentitan-item"><i class="fas fa-check" aria-hidden="true"></i><span>Enforces security policy decisions</span></div>
+                    <div class="list-item opentitan-item"><i class="fas fa-check" aria-hidden="true"></i><span>Protects cryptographic secrets</span></div>
+                    <div class="list-item opentitan-item"><i class="fas fa-check" aria-hidden="true"></i><span>Provides attested results only</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="security-note">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            <p class="security-note-text">Clear separation reduces blast radius of host compromise — secrets remain inside the RoT</p>
+        </div>
+
+        <!-- Bottom navigation (existing buttons) -->
+        <div class="navigation-buttons mt-10 flex justify-between w-full">
+          <a href="page_3.html"
+             class="inline-block px-8 py-3 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-lg font-semibold shadow-lg transition">
+            ← Previous Slide
+          </a>
+
+          <a href="page_5.html"
+             class="inline-block px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold shadow-lg transition">
+            Next Slide →
+          </a>
+        </div>
+    </div>
 </div>
 </body>
 </html>

@@ -1,314 +1,266 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=1280, height=720" name="viewport"/>
-<title>Key Takeaways</title>
+<title>Key Takeaways - Animated</title>
+
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Inter', sans-serif;
-        overflow: hidden;
-    }
-    .slide-container {
-        width: 100vw;   /* full viewport width */
-        height: 100vh;  /* full viewport height */
-        background-color: #0f172a;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-    }
-    .header {
-        padding: 40px 80px 25px 80px;
-        border-bottom: 2px solid rgba(59, 130, 246, 0.4);
-    }
-    .slide-title {
-        font-size: 48px;
-        font-weight: 800;
-        color: #ffffff;
-        margin: 0;
-        text-align: center;
-    }
-    .title-highlight {
-        color: #60a5fa;
-    }
-    .content-wrapper {
-        flex: 1;
-        padding: 40px 80px 50px 80px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        position: relative;
-        z-index: 2;
-    }
-    .takeaways-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-        flex: 1;
-    }
-    .takeaway-card {
-        border-radius: 10px;
-        padding: 22px 26px;
-        display: flex;
-        gap: 18px;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-    }
-    .card-blue {
-        background-color: rgba(59, 130, 246, 0.12);
-        border: 2px solid rgba(59, 130, 246, 0.4);
-    }
-    .card-green {
-        background-color: rgba(16, 185, 129, 0.12);
-        border: 2px solid rgba(16, 185, 129, 0.4);
-    }
-    .card-purple {
-        background-color: rgba(139, 92, 246, 0.12);
-        border: 2px solid rgba(139, 92, 246, 0.4);
-    }
-    .card-cyan {
-        background-color: rgba(6, 182, 212, 0.12);
-        border: 2px solid rgba(6, 182, 212, 0.4);
-    }
-    .card-amber {
-        background-color: rgba(245, 158, 11, 0.12);
-        border: 2px solid rgba(245, 158, 11, 0.4);
-    }
-    .card-rose {
-        background-color: rgba(244, 63, 94, 0.12);
-        border: 2px solid rgba(244, 63, 94, 0.4);
-    }
-    .takeaway-icon-box {
-        width: 60px;
-        height: 60px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .icon-blue {
-        background-color: rgba(59, 130, 246, 0.25);
-        border: 2px solid rgba(59, 130, 246, 0.6);
-    }
-    .icon-blue i {
-        color: #60a5fa;
-        font-size: 26px;
-    }
-    .icon-green {
-        background-color: rgba(16, 185, 129, 0.25);
-        border: 2px solid rgba(16, 185, 129, 0.6);
-    }
-    .icon-green i {
-        color: #34d399;
-        font-size: 26px;
-    }
-    .icon-purple {
-        background-color: rgba(139, 92, 246, 0.25);
-        border: 2px solid rgba(139, 92, 246, 0.6);
-    }
-    .icon-purple i {
-        color: #a78bfa;
-        font-size: 26px;
-    }
-    .icon-cyan {
-        background-color: rgba(6, 182, 212, 0.25);
-        border: 2px solid rgba(6, 182, 212, 0.6);
-    }
-    .icon-cyan i {
-        color: #22d3ee;
-        font-size: 26px;
-    }
-    .icon-amber {
-        background-color: rgba(245, 158, 11, 0.25);
-        border: 2px solid rgba(245, 158, 11, 0.6);
-    }
-    .icon-amber i {
-        color: #fbbf24;
-        font-size: 26px;
-    }
-    .icon-rose {
-        background-color: rgba(244, 63, 94, 0.25);
-        border: 2px solid rgba(244, 63, 94, 0.6);
-    }
-    .icon-rose i {
-        color: #fb7185;
-        font-size: 26px;
-    }
-    .takeaway-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-    }
-    .takeaway-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #ffffff;
-        margin: 0;
-        line-height: 1.3;
-    }
-    .takeaway-description {
-        font-size: 14px;
-        color: #cbd5e1;
-        margin: 0;
-        line-height: 1.4;
-        font-weight: 400;
-    }
-    .conclusion-banner {
-        background-color: rgba(59, 130, 246, 0.15);
-        border: 2px solid rgba(59, 130, 246, 0.5);
-        border-radius: 10px;
-        padding: 18px 30px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        justify-content: center;
-    }
-    .banner-icon {
-        width: 48px;
-        height: 48px;
-        background-color: rgba(59, 130, 246, 0.3);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .banner-icon i {
-        color: #60a5fa;
-        font-size: 24px;
-    }
-    .banner-text {
-        font-size: 20px;
-        color: #ffffff;
-        font-weight: 700;
-        margin: 0;
-        text-align: center;
-    }
-    .banner-highlight {
-        color: #60a5fa;
-    }
-    .decorative-element {
-        position: absolute;
-        border-radius: 50%;
-        opacity: 0.04;
-        z-index: 0;
-    }
-    .circle-1 {
-        width: 400px;
-        height: 400px;
-        background-color: #3b82f6;
-        top: -120px;
-        right: -100px;
-    }
-    .circle-2 {
-        width: 300px;
-        height: 300px;
-        background-color: #10b981;
-        bottom: -100px;
-        left: -80px;
-    }
-    .circle-3 {
-        width: 200px;
-        height: 200px;
-        background-color: #8b5cf6;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
+  :root{
+    --bg:#0f172a;
+    --blue:#3b82f6;
+    --green:#10b981;
+    --purple:#8b5cf6;
+    --text:#ffffff;
+    --muted:#cbd5e1;
+    --bottom-nav-height: 68px;
+    --bottom-padding-extra: 18px;
+  }
+
+  html, body { height: 100%; overflow: hidden; }
+  body{
+    margin:0; padding:0;
+    font-family:'Inter',sans-serif;
+    background-color:var(--bg);
+    color:var(--text);
+  }
+
+  /* --- Keyframe Animations --- */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes pulseSlow {
+    0%, 100% { transform: scale(1); opacity: 0.04; }
+    50% { transform: scale(1.1); opacity: 0.07; }
+  }
+
+  /* --- Layout & Elements --- */
+  .slide-container{
+    width:100vw; height:100vh;
+    display:flex; flex-direction:column;
+    position:relative; overflow:hidden;
+    isolation:isolate;
+  }
+
+  .header{
+    padding:40px 80px 25px 80px;
+    border-bottom:2px solid rgba(59,130,246,0.4);
+    position:relative; z-index:2;
+    animation: fadeInUp 0.8s ease-out both;
+  }
+
+  .slide-title{
+    font-size:42px; font-weight:800; text-align:center;
+    line-height:1.15; letter-spacing:-0.02em;
+  }
+
+  .title-highlight{ color:#60a5fa; }
+
+  .content-wrapper{
+    flex:1;
+    padding:36px 70px calc(var(--bottom-nav-height) + var(--bottom-padding-extra));
+    display:flex; flex-direction:column; gap:18px;
+    position:relative; z-index:2;
+  }
+
+  .takeaways-grid{
+    display:grid; grid-template-columns:repeat(2,1fr);
+    gap:16px; flex:1;
+  }
+
+  .takeaway-card{
+    border-radius:10px; padding:20px 24px;
+    display:flex; gap:16px; align-items:center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Hover effect for interactivity */
+  .takeaway-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    filter: brightness(1.1);
+  }
+
+  /* Entrance Delays for Grid Items */
+  .takeaway-card:nth-child(odd) { animation: fadeInRight 0.6s ease-out both; }
+  .takeaway-card:nth-child(even) { animation: fadeInLeft 0.6s ease-out both; }
+  
+  .takeaway-card:nth-child(1), .takeaway-card:nth-child(2) { animation-delay: 0.2s; }
+  .takeaway-card:nth-child(3), .takeaway-card:nth-child(4) { animation-delay: 0.4s; }
+  .takeaway-card:nth-child(5), .takeaway-card:nth-child(6) { animation-delay: 0.6s; }
+
+  .card-blue{  background-color:rgba(59,130,246,0.12); border:2px solid rgba(59,130,246,0.4); }
+  .card-green{ background-color:rgba(16,185,129,0.12); border:2px solid rgba(16,185,129,0.4); }
+  .card-purple{background-color:rgba(139,92,246,0.12); border:2px solid rgba(139,92,246,0.4); }
+  .card-cyan{  background-color:rgba(6,182,212,0.12);  border:2px solid rgba(6,182,212,0.4); }
+  .card-amber{ background-color:rgba(245,158,11,0.12); border:2px solid rgba(245,158,11,0.4); }
+  .card-rose{  background-color:rgba(244,63,94,0.12);  border:2px solid rgba(244,63,94,0.4); }
+
+  .takeaway-icon-box{
+    width:56px; height:56px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+
+  .icon-blue{ background-color:rgba(59,130,246,0.25); border:2px solid rgba(59,130,246,0.6); }
+  .icon-blue i{ font-size:24px; color:#60a5fa; }
+  .icon-green{ background-color:rgba(16,185,129,0.25); border:2px solid rgba(16,185,129,0.6); }
+  .icon-green i{ font-size:24px; color:#34d399; }
+  .icon-purple{ background-color:rgba(139,92,246,0.25); border:2px solid rgba(139,92,246,0.6); }
+  .icon-purple i{ font-size:24px; color:#a78bfa; }
+  .icon-cyan{ background-color:rgba(6,182,212,0.25); border:2px solid rgba(6,182,212,0.6); }
+  .icon-cyan i{ font-size:24px; color:#22d3ee; }
+  .icon-amber{ background-color:rgba(245,158,11,0.25); border:2px solid rgba(245,158,11,0.6); }
+  .icon-amber i{ font-size:24px; color:#fbbf24; }
+  .icon-rose{ background-color:rgba(244,63,94,0.25); border:2px solid rgba(244,63,94,0.6); }
+  .icon-rose i{ font-size:24px; color:#fb7185; }
+
+  .takeaway-title{ font-size:17px; font-weight:700; color:#fff; }
+  .takeaway-description{ font-size:13px; color:#cbd5e1; line-height:1.4; }
+
+  .conclusion-banner{
+    background-color:rgba(59,130,246,0.15);
+    border:2px solid rgba(59,130,246,0.5);
+    border-radius:10px; padding:16px 26px;
+    display:flex; align-items:center; gap:14px; justify-content:center;
+    animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: 1s;
+  }
+
+  .banner-icon{
+    width:44px; height:44px; background-color:rgba(59,130,246,0.3);
+    border-radius:8px; display:flex; align-items:center; justify-content:center;
+  }
+  .banner-text{ font-size:18px; font-weight:700; text-align:center; }
+  .banner-highlight{ color:#60a5fa; }
+
+  /* Decorative Animated Background */
+  .decorative-element{
+    position:absolute; border-radius:50%; opacity:0.04; 
+    pointer-events:none; z-index:0;
+    animation: pulseSlow 8s infinite ease-in-out;
+  }
+  .circle-1{ width:380px; height:380px; background-color:#3b82f6; top:-120px; right:-100px; }
+  .circle-2{ width:280px; height:280px; background-color:#10b981; bottom:-100px; left:-80px; animation-delay: -2s;}
+  .circle-3{ width:180px; height:180px; background-color:#8b5cf6; top:50%; left:50%; transform:translate(-50%,-50%); animation-delay: -4s;}
+
+  .bottom-nav{
+    position:absolute; left:0; right:0; bottom:0;
+    height:var(--bottom-nav-height); padding:12px 24px;
+    display:flex; justify-content:space-between; align-items:center;
+    background: linear-gradient(180deg,transparent 0%, rgba(15,23,42,0.95) 100%);
+    z-index:3;
+  }
+
+  .nav-btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:10px 18px; border-radius:9999px;
+    text-decoration:none; font-weight:700; font-size:15px; color:#fff;
+    box-shadow:0 8px 24px rgba(0,0,0,0.35); transition: 0.2s;
+  }
+  .nav-prev{ background-color:#4b5563; }
+  .nav-next{ background-color:#2563eb; }
+  .nav-btn:hover { transform: scale(1.05); }
+
 </style>
 </head>
+
 <body>
 <div class="slide-container">
-<div class="decorative-element circle-1"></div>
-<div class="decorative-element circle-2"></div>
-<div class="decorative-element circle-3"></div>
-<div class="header">
-<h1 class="slide-title"><p><span class="title-highlight">Key</span> Takeaways</p></h1>
-</div>
-<div class="content-wrapper">
-<div class="takeaways-grid">
-<div class="takeaway-card card-blue">
-<div class="takeaway-icon-box icon-blue">
-<i class="fas fa-anchor"></i>
-</div>
-<div class="takeaway-content">
-<h3 class="takeaway-title"><p>Hardware Trust Anchor</p></h3>
-<p class="takeaway-description">OpenTitan anchors trust in hardware with transparent, verifiable design for modern systems</p>
-</div>
-</div>
-<div class="takeaway-card card-green">
-<div class="takeaway-icon-box icon-green">
-<i class="fas fa-code-branch"></i>
-</div>
-<div class="takeaway-content">
-<h3 class="takeaway-title"><p>Open Source Advantage</p></h3>
-<p class="takeaway-description">Full transparency increases auditability and builds long-term confidence without security by obscurity</p>
-</div>
-</div>
-<div class="takeaway-card card-purple">
-<div class="takeaway-icon-box icon-purple">
-<i class="fas fa-project-diagram"></i>
-</div>
-<div class="takeaway-content">
-<h3 class="takeaway-title"><p>Clear Architecture Split</p></h3>
-<p class="takeaway-description">Strict security boundaries between highly-trusted core and less-trusted host enforce separation</p>
-</div>
-</div>
-<div class="takeaway-card card-cyan">
-<div class="takeaway-icon-box icon-cyan">
-<i class="fas fa-code"></i>
-</div>
-<div class="takeaway-content">
-<h3 class="takeaway-title"><p>C for Minimal Core</p></h3>
-<p class="takeaway-description">C and assembly provide deterministic behavior and hardware control for trusted boot code paths</p>
-</div>
-</div>
-<div class="takeaway-card card-amber">
-<div class="takeaway-icon-box icon-amber">
-<i class="fab fa-rust"></i>
-</div>
-<div class="takeaway-content">
-<h3 class="takeaway-title"><p>Rust for Safe Host Integration</p></h3>
-<p class="takeaway-description">Memory safety and strong types on host side reduce risk from malformed inputs and bugs</p>
-</div>
-</div>
-<div class="takeaway-card card-rose">
-<div class="takeaway-icon-box icon-rose">
-<i class="fas fa-shield-alt"></i>
-</div>
-<div class="takeaway-content">
-<h3 class="takeaway-title"><p>Security by Design</p></h3>
-<p class="takeaway-description">Protection enforced through architecture and implementation — not through secrecy or obscurity</p>
-</div>
-</div>
-</div>
-<div class="conclusion-banner">
-<div class="banner-icon">
-<i class="fas fa-check-double"></i>
-</div>
-<p class="banner-text"><span class="banner-highlight">OpenTitan</span> delivers verifiable security through open, hardware-rooted trust</p>
-</div>
-</div>
-<div class="navigation-buttons mt-10 flex justify-between w-full">
-  <a href="page_12.html"
-     class="inline-block px-8 py-3 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-lg font-semibold shadow-lg transition">
-    ← Previous Slide
-  </a>
 
-  <a href="page_14.html"
-     class="inline-block px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold shadow-lg transition">
-    Next Slide →
-  </a>
+  <div class="decorative-element circle-1"></div>
+  <div class="decorative-element circle-2"></div>
+  <div class="decorative-element circle-3"></div>
+
+  <div class="header">
+    <h1 class="slide-title">
+      <span class="title-highlight">Key</span><br>
+      Takeaways
+    </h1>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="takeaways-grid">
+      <div class="takeaway-card card-blue">
+        <div class="takeaway-icon-box icon-blue"><i class="fas fa-anchor"></i></div>
+        <div class="takeaway-content">
+          <h3 class="takeaway-title">Hardware Trust Anchor</h3>
+          <p class="takeaway-description">OpenTitan anchors trust in hardware with transparent, verifiable design.</p>
+        </div>
+      </div>
+
+      <div class="takeaway-card card-green">
+        <div class="takeaway-icon-box icon-green"><i class="fas fa-code-branch"></i></div>
+        <div class="takeaway-content">
+          <h3 class="takeaway-title">Open Source Advantage</h3>
+          <p class="takeaway-description">Transparency increases auditability and builds long-term confidence.</p>
+        </div>
+      </div>
+
+      <div class="takeaway-card card-purple">
+        <div class="takeaway-icon-box icon-purple"><i class="fas fa-project-diagram"></i></div>
+        <div class="takeaway-content">
+          <h3 class="takeaway-title">Clear Architecture Split</h3>
+          <p class="takeaway-description">Strict boundaries enforce separation between core and host.</p>
+        </div>
+      </div>
+
+      <div class="takeaway-card card-cyan">
+        <div class="takeaway-icon-box icon-cyan"><i class="fas fa-code"></i></div>
+        <div class="takeaway-content">
+          <h3 class="takeaway-title">C for Minimal Core</h3>
+          <p class="takeaway-description">C and assembly ensure determinism and low-level hardware control.</p>
+        </div>
+      </div>
+
+      <div class="takeaway-card card-amber">
+        <div class="takeaway-icon-box icon-amber"><i class="fab fa-rust"></i></div>
+        <div class="takeaway-content">
+          <h3 class="takeaway-title">Rust for Host Safety</h3>
+          <p class="takeaway-description">Memory safety and strong types reduce risks from malformed inputs.</p>
+        </div>
+      </div>
+
+      <div class="takeaway-card card-rose">
+        <div class="takeaway-icon-box icon-rose"><i class="fas fa-shield-alt"></i></div>
+        <div class="takeaway-content">
+          <h3 class="takeaway-title">Security by Design</h3>
+          <p class="takeaway-description">Protection comes from architecture and implementation—not obscurity.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="conclusion-banner">
+      <div class="banner-icon"><i class="fas fa-check-double"></i></div>
+      <p class="banner-text"><span class="banner-highlight">OpenTitan</span> delivers verifiable security through open hardware-rooted trust.</p>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-btn nav-prev" href="page_12.html"><i class="fas fa-arrow-left"></i> Previous Slide</a>
+    <a class="nav-btn nav-next" href="page_14.html">Next Slide <i class="fas fa-arrow-right"></i></a>
+  </div>
+
 </div>
 </body>
 </html>

@@ -1,152 +1,294 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=1280, height=720" name="viewport"/>
 <title>OpenTitan: An Open-Source Silicon Root of Trust</title>
+
+<!-- Tailwind & Icons -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;family=Roboto+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
 <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-        }
-        .slide-container {
-            width: 100vw;   /* full viewport width */
-            height: 100vh;  /* full viewport height */
-            background-color: #0f172a;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-        .content-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 60px 80px;
-            position: relative;
-            z-index: 2;
-        }
-        .main-title {
-            font-size: 68px;
-            font-weight: 800;
-            color: #ffffff;
-            text-align: center;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
-        }
-        .title-highlight {
-            color: #3b82f6;
-        }
-        .subtitle {
-            font-size: 22px;
-            color: #94a3b8;
-            text-align: center;
-            margin-bottom: 50px;
-            font-weight: 300;
-        }
-        .topics-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 16px;
-            max-width: 1000px;
-        }
-        .topic-item {
-            background-color: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 8px;
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .topic-item i {
-            color: #3b82f6;
-            font-size: 18px;
-        }
-        .topic-text {
-            color: #e2e8f0;
-            font-size: 16px;
-            font-weight: 400;
-            margin: 0;
-        }
-        .decorative-element {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.05;
-        }
-        .circle-1 {
-            width: 400px;
-            height: 400px;
-            background-color: #3b82f6;
-            top: -200px;
-            right: -100px;
-        }
-        .circle-2 {
-            width: 300px;
-            height: 300px;
-            background-color: #8b5cf6;
-            bottom: -150px;
-            left: -100px;
-        }
-        .chip-icon {
-            position: absolute;
-            top: 30px;
-            right: 40px;
-            color: #3b82f6;
-            font-size: 48px;
-            opacity: 0.3;
-        }
-    </style>
+    :root{
+        --bg-1:#0f172a; /* slate-900 */
+        --bg-2:#0b1222;
+        --accent:#3b82f6; /* blue-500 */
+        --accent-2:#8b5cf6; /* violet-500 */
+        --muted:#94a3b8; /* slate-400 */
+        --text:#ffffff;
+        --card:#0b1730;
+    }
+
+    html, body {
+        height: 100%;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+        overflow: hidden;
+        background: radial-gradient(1200px 800px at 80% -10%, #1e293b 0%, var(--bg-1) 60%),
+                    radial-gradient(800px 600px at -10% 110%, #141a2a 0%, var(--bg-2) 60%);
+        animation: bgPulse 14s ease-in-out infinite alternate;
+        color: var(--text);
+    }
+
+    /* Full slide */
+    .slide-container {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: transparent;
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    /* Decorative circles (floating) */
+    .decorative-element {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.08;
+        filter: blur(0.3px);
+        will-change: transform, opacity;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .circle-1 {
+        width: 420px;
+        height: 420px;
+        background-color: var(--accent);
+        top: -200px;
+        right: -120px;
+        animation: floatRight 18s ease-in-out infinite;
+    }
+    .circle-2 {
+        width: 320px;
+        height: 320px;
+        background-color: var(--accent-2);
+        bottom: -150px;
+        left: -100px;
+        animation: floatLeft 20s ease-in-out infinite;
+    }
+
+    /* Icon entrance */
+    .chip-icon {
+        position: absolute;
+        top: 30px;
+        right: 40px;
+        color: var(--accent);
+        font-size: 48px;
+        opacity: 0;
+        z-index: 1;
+        animation: fadeInDown 800ms ease forwards 400ms;
+        opacity: 0.35;
+        text-shadow: 0 8px 28px rgba(59, 130, 246, 0.35);
+    }
+
+    /* Content */
+    .content-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 80px;
+        position: relative;
+        z-index: 2;
+        gap: 10px;
+    }
+
+    .main-title {
+        font-size: clamp(40px, 6.5vw, 68px);
+        font-weight: 800;
+        color: var(--text);
+        text-align: center;
+        line-height: 1.15;
+        margin: 0 0 12px 0;
+        letter-spacing: -0.02em;
+        opacity: 0;
+        transform: translateY(12px);
+        animation: fadeUp 700ms ease-out forwards;
+    }
+    .title-highlight {
+        color: var(--accent);
+    }
+
+    .subtitle {
+        font-size: clamp(16px, 2.2vw, 22px);
+        color: var(--muted);
+        text-align: center;
+        font-weight: 300;
+        margin: 0 0 28px 0;
+        opacity: 0;
+        transform: translateY(12px);
+        animation: fadeUp 700ms ease-out forwards 120ms;
+    }
+
+    .topics-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+        max-width: 1000px;
+    }
+    .topic-item {
+        background-color: rgba(59, 130, 246, 0.08);
+        border: 1px solid rgba(59, 130, 246, 0.28);
+        border-radius: 10px;
+        padding: 12px 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        backdrop-filter: blur(2px);
+        box-shadow: 0 6px 22px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.03);
+        transform: translateY(14px);
+        opacity: 0;
+    }
+    .topic-item i {
+        color: var(--accent);
+        font-size: 18px;
+    }
+    .topic-text {
+        color: #e2e8f0;
+        font-size: 16px;
+        font-weight: 400;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    /* Stagger topics */
+    .topic-item:nth-child(1) { animation: fadeUp 650ms ease-out forwards 220ms; }
+    .topic-item:nth-child(2) { animation: fadeUp 650ms ease-out forwards 320ms; }
+    .topic-item:nth-child(3) { animation: fadeUp 650ms ease-out forwards 420ms; }
+    .topic-item:nth-child(4) { animation: fadeUp 650ms ease-out forwards 520ms; }
+    .topic-item:nth-child(5) { animation: fadeUp 650ms ease-out forwards 620ms; }
+
+    /* Bottom bar for the Next button */
+    .bottom-bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 18px 24px 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 3;
+        /* slight gradient to separate from content */
+        background: linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.55) 45%, rgba(15,23,42,0.85) 100%);
+    }
+
+    .next-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 22px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 10px 30px rgba(37,99,235,0.45);
+        transform: translateY(6px);
+        opacity: 0;
+        animation: fadeUp 650ms ease-out forwards 720ms;
+        transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
+    }
+    .next-btn:hover {
+        transform: translateY(0) scale(1.02);
+        box-shadow: 0 16px 36px rgba(37,99,235,0.55);
+        filter: brightness(1.05);
+    }
+    .next-btn i {
+        font-size: 16px;
+        opacity: 0.95;
+    }
+
+    /* Keyframes */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes floatRight {
+        0%   { transform: translate(0, 0) scale(1); }
+        50%  { transform: translate(-16px, 10px) scale(1.03); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes floatLeft {
+        0%   { transform: translate(0, 0) scale(1); }
+        50%  { transform: translate(16px, -12px) scale(1.04); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes bgPulse {
+        0%   { filter: hue-rotate(0deg) brightness(1); }
+        100% { filter: hue-rotate(6deg) brightness(1.02); }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+    }
+</style>
 </head>
 <body>
 <div class="slide-container">
-<div class="decorative-element circle-1"></div>
-<div class="decorative-element circle-2"></div>
-<i class="fas fa-microchip chip-icon"></i>
-<div class="content-wrapper">
-<h1 class="main-title">
-<p><span class="title-highlight">OpenTitan</span>: An Open-Source<br/>Silicon Root of Trust</p>
-</h1>
-<div class="subtitle">
-<p>Transparent Hardware Security for Modern Systems</p>
-</div>
-<div class="topics-container">
-<div class="topic-item">
-<i class="fas fa-shield-alt"></i>
-<p class="topic-text">What it is and why it matters</p>
-</div>
-<div class="topic-item">
-<i class="fas fa-code-branch"></i>
-<p class="topic-text">Why open source (no obscurity)</p>
-</div>
-<div class="topic-item">
-<i class="fas fa-sitemap"></i>
-<p class="topic-text">Architecture split: core vs host</p>
-</div>
-<div class="topic-item">
-<i class="fas fa-code"></i>
-<p class="topic-text">Language choices: C vs Rust</p>
-</div>
-<div class="topic-item">
-<i class="fas fa-balance-scale"></i>
-<p class="topic-text">Pros &amp; cons on the host side</p>
-</div>
-<a href="page_1.html"
-   class="mt-10 inline-block px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold shadow-lg transition">
-  Next Slide →
-</a>
-</div>
-</div>
+    <!-- Decorative elements -->
+    <div class="decorative-element circle-1"></div>
+    <div class="decorative-element circle-2"></div>
+
+    <!-- Faint chip icon -->
+    <i class="fas fa-microchip chip-icon" aria-hidden="true"></i>
+
+    <!-- Center content -->
+    <div class="content-wrapper">
+        <h1 class="main-title">
+          <span class="title-highlight">OpenTitan:</span><br>
+          An Open-Source<br>
+          Silicon Root of Trust
+        </h1>
+
+        <p class="subtitle">Transparent Hardware Security for Modern Systems</p>
+
+        <div class="topics-container">
+            <div class="topic-item">
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                <p class="topic-text">What it is and why it matters</p>
+            </div>
+            <div class="topic-item">
+                <i class="fas fa-code-branch" aria-hidden="true"></i>
+                <p class="topic-text">Why open source (no obscurity)</p>
+            </div>
+            <div class="topic-item">
+                <i class="fas fa-sitemap" aria-hidden="true"></i>
+                <p class="topic-text">Architecture split: core vs host</p>
+            </div>
+            <div class="topic-item">
+                <i class="fas fa-code" aria-hidden="true"></i>
+                <p class="topic-text">Language choices: C vs Rust</p>
+            </div>
+            <div class="topic-item">
+                <i class="fas fa-balance-scale" aria-hidden="true"></i>
+                <p class="topic-text">Pros &amp; cons on the host side</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom-fixed Next button -->
+    <div class="bottom-bar">
+        <a href="page_1.html" class="next-btn" aria-label="Go to next slide">
+            <span>Next Slide</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
 </div>
 </body>
 </html>

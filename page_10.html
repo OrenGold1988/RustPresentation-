@@ -1,173 +1,281 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=1280, height=720" name="viewport"/>
 <title>Why Not Use Rust Everywhere?</title>
+
+<!-- CSS dependencies -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Inter', sans-serif;
-        overflow: hidden;
-    }
-    .slide-container {
-        width: 100vw;   /* full viewport width */
-        height: 100vh;  /* full viewport height */
-        background-color: #0f172a;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-    }
-    .header {
-        padding: 50px 80px 30px 80px;
-        border-bottom: 2px solid rgba(59, 130, 246, 0.3);
-    }
-    .slide-title {
-        font-size: 48px;
-        font-weight: 700;
-        color: #ffffff;
-        margin: 0;
-    }
-    .title-highlight {
-        color: #3b82f6;
-    }
-    .content-wrapper {
-        flex: 1;
-        padding: 50px 80px 60px 80px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    .bullet-list {
-        display: flex;
-        flex-direction: column;
-        gap: 28px;
-    }
-    .bullet-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 24px;
-    }
-    .bullet-icon {
-        width: 48px;
-        height: 48px;
-        background-color: rgba(59, 130, 246, 0.15);
-        border: 2px solid rgba(59, 130, 246, 0.4);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .bullet-icon i {
-        color: #3b82f6;
-        font-size: 20px;
-    }
-    .bullet-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    .bullet-text {
-        font-size: 24px;
-        color: #e2e8f0;
-        line-height: 1.5;
-        margin: 0;
-        font-weight: 400;
-    }
-    .bullet-strong {
-        font-weight: 600;
-        color: #ffffff;
-    }
-    .decorative-element {
-        position: absolute;
-        border-radius: 50%;
-        opacity: 0.04;
-        z-index: 0;
-    }
-    .circle-1 {
-        width: 350px;
-        height: 350px;
-        background-color: #3b82f6;
-        top: -100px;
-        right: -80px;
-    }
-    .circle-2 {
-        width: 250px;
-        height: 250px;
-        background-color: #8b5cf6;
-        bottom: -80px;
-        left: -60px;
-    }
+  :root{
+    --bg:#0f172a;
+    --blue:#3b82f6;
+    --violet:#8b5cf6;
+    --text:#ffffff;
+    --muted:#e2e8f0;
+
+    /* Reserve space so content never overlaps the bottom nav (no scrollbars) */
+    --bottom-nav-height: 68px;
+    --bottom-padding-extra: 18px;
+  }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden; /* no page scrollbars */
+    background-color: var(--bg);
+    color: var(--text);
+  }
+
+  .slide-container {
+    width: 100vw;   /* full viewport width */
+    height: 100vh;  /* full viewport height */
+    background-color: var(--bg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .header {
+    padding: 50px 80px 30px 80px;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+    position: relative;
+    z-index: 2;
+  }
+
+  .slide-title {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .title-highlight { color: var(--blue); }
+
+  .content-wrapper {
+    flex: 1;
+    padding: 50px 80px calc(var(--bottom-nav-height) + var(--bottom-padding-extra));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    position: relative;
+    z-index: 2;
+    overflow: hidden; /* no inner scrollbars */
+  }
+
+  .bullet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px; /* slightly tighter for fit */
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .bullet-icon {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(59, 130, 246, 0.15);
+    border: 2px solid rgba(59, 130, 246, 0.4);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .bullet-icon i {
+    color: var(--blue);
+    font-size: 20px;
+  }
+
+  .bullet-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .bullet-text {
+    font-size: 24px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 400;
+  }
+  .bullet-strong {
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* Decorative circles (static) */
+  .decorative-element {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.04;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .circle-1 {
+    width: 350px;
+    height: 350px;
+    background-color: var(--blue);
+    top: -100px;
+    right: -80px;
+  }
+  .circle-2 {
+    width: 250px;
+    height: 250px;
+    background-color: var(--violet);
+    bottom: -80px;
+    left: -60px;
+  }
+
+  /* Bottom navigation: fixed previous (left) & next (right) */
+  .bottom-nav {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: var(--bottom-nav-height);
+    padding: 12px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 3;
+    background: linear-gradient(
+      180deg,
+      rgba(15,23,42,0) 0%,
+      rgba(15,23,42,0.65) 50%,
+      rgba(15,23,42,0.95) 100%
+    );
+    box-sizing: border-box;
+  }
+  .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    color: #fff;
+    font-size: 15px;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    white-space: nowrap;
+  }
+  .nav-prev { background-color: #4b5563; }      /* gray-600 */
+  .nav-prev:hover { background-color: #374151; } /* gray-700 */
+  .nav-next { background-color: #2563eb; }       /* blue-600 */
+  .nav-next:hover { background-color: #1d4ed8; } /* blue-700 */
+
+  /* Optional: slight compression for short viewports */
+  @media (max-height: 640px) {
+    .header { padding: 42px 70px 22px 70px; }
+    .slide-title { font-size: 44px; }
+    .content-wrapper { padding: 42px 70px calc(var(--bottom-nav-height) + 12px); }
+    .bullet-text { font-size: 23px; }
+  }
 </style>
 </head>
 <body>
 <div class="slide-container">
-<div class="decorative-element circle-1"></div>
-<div class="decorative-element circle-2"></div>
-<div class="header">
-<h1 class="slide-title"><p>Why Not Use <span class="title-highlight">Rust Everywhere?</span></p></h1>
-</div>
-<div class="content-wrapper">
-<div class="bullet-list">
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-memory"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text"><span class="bullet-strong">Boot ROM and earliest init</span> require extreme minimalism and low-level control</p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-cogs"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text">Some bring-up paths demand <span class="bullet-strong">assembly and direct register control</span></p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-code-branch"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text"><span class="bullet-strong">no_std/alloc-less Rust</span> is possible but increases complexity significantly</p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-tools"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text">Toolchain and <span class="bullet-strong">verification flows for ultra-low-level targets</span> still maturing</p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-certificate"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text">Existing <span class="bullet-strong">certified/verified C codebases</span> remain widely relied upon in security-critical firmware</p>
-</div>
-<div class="navigation-buttons mt-10 flex justify-between w-full">
-  <a href="page_9.html"
-     class="inline-block px-8 py-3 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-lg font-semibold shadow-lg transition">
-    ← Previous Slide
-  </a>
+  <!-- Decorative elements -->
+  <div class="decorative-element circle-1"></div>
+  <div class="decorative-element circle-2"></div>
 
-  <a href="page_11.html"
-     class="inline-block px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold shadow-lg transition">
-    Next Slide →
-  </a>
-</div>
-</div>
-</div>
-</div>
+  <!-- Header -->
+  <div class="header">
+    <h1 class="slide-title">
+      Why Not Use<br>
+      <span class="title-highlight">Rust Everywhere?</span>
+    </h1>
+  </div>
+
+  <!-- Content -->
+  <div class="content-wrapper">
+    <div class="bullet-list">
+
+      <div class="bullet-item">
+        <div class="bullet-icon">
+          <i class="fas fa-memory" aria-hidden="true"></i>
+        </div>
+        <div class="bullet-content">
+          <p class="bullet-text">
+            <span class="bullet-strong">Boot ROM and earliest init</span> require extreme minimalism and low-level control
+          </p>
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-icon">
+          <i class="fas fa-cogs" aria-hidden="true"></i>
+        </div>
+        <div class="bullet-content">
+          <p class="bullet-text">
+            Some bring-up paths demand <span class="bullet-strong">assembly and direct register control</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-icon">
+          <i class="fas fa-code-branch" aria-hidden="true"></i>
+        </div>
+        <div class="bullet-content">
+          <p class="bullet-text">
+            <span class="bullet-strong">no_std/alloc-less Rust</span> is possible but increases complexity significantly
+          </p>
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-icon">
+          <i class="fas fa-tools" aria-hidden="true"></i>
+        </div>
+        <div class="bullet-content">
+          <p class="bullet-text">
+            Toolchain and <span class="bullet-strong">verification flows for ultra-low-level targets</span> still maturing
+          </p>
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-icon">
+          <i class="fas fa-certificate" aria-hidden="true"></i>
+        </div>
+        <div class="bullet-content">
+          <p class="bullet-text">
+            Existing <span class="bullet-strong">certified/verified C codebases</span> remain widely relied upon in security-critical firmware
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom-fixed navigation -->
+  <div class="bottom-nav">
+    <a class="nav-btn nav-prev" href="page_9.html" aria-label="Previous Slide">
+      <i class="fas fa-arrow-left" aria-hidden="true"></i>
+      <span>Previous Slide</span>
+    </a>
+
+    <a class="nav-btn nav-next" href="page_11.html" aria-label="Next Slide">
+      <span>Next Slide</span>
+      <i class="fas fa-arrow-right" aria-hidden="true"></i>
+    </a>
+  </div>
 </div>
 </body>
 </html>

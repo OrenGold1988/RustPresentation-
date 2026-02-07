@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -9,51 +8,88 @@
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet"/>
 <style>
+    :root{
+        --bg:#0f172a;      /* slate-900 */
+        --accent:#3b82f6;  /* blue-500 */
+        --accent-2:#8b5cf6;/* violet-500 */
+        --muted:#94a3b8;   /* slate-400 */
+        --text:#ffffff;
+    }
+    html, body { height: 100%; }
     body {
         margin: 0;
         padding: 0;
         font-family: 'Inter', sans-serif;
         overflow: hidden;
+        background: var(--bg);
+        color: var(--text);
+        /* gentle background “breathing” */
+        background-image:
+            radial-gradient(900px 600px at 90% -10%, #1e293b 0%, var(--bg) 60%),
+            radial-gradient(700px 500px at -10% 110%, #0b1222 0%, var(--bg) 60%);
+        animation: bgPulse 14s ease-in-out infinite alternate;
     }
+
     .slide-container {
-        width: 100vw;   /* full viewport width */
-        height: 100vh;  /* full viewport height */
-        background-color: #0f172a;
+        width: 100vw;
+        height: 100vh;
         display: flex;
         flex-direction: column;
         position: relative;
         overflow: hidden;
+        isolation: isolate;
     }
+
     .header {
         padding: 50px 80px 30px 80px;
         border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        position: relative;
+        z-index: 2;
     }
     .slide-title {
-        font-size: 48px;
-        font-weight: 700;
+        font-size: clamp(34px, 4vw, 48px);
+        font-weight: 800;
         color: #ffffff;
         margin: 0;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        opacity: 0;
+        transform: translateY(10px);
+        animation: fadeInDown 750ms ease-out forwards 80ms;
     }
-    .title-highlight {
-        color: #3b82f6;
-    }
+    .title-highlight { color: var(--accent); }
+    .punct { display: inline-block; }
+
     .content-wrapper {
         flex: 1;
-        padding: 50px 80px 60px 80px;
+        padding: 50px 80px 120px; /* extra bottom space so content never hides under nav */
         display: flex;
         flex-direction: column;
         justify-content: center;
+        position: relative;
+        z-index: 2;
     }
+
     .bullet-list {
         display: flex;
         flex-direction: column;
         gap: 28px;
+        max-width: 1200px;
     }
     .bullet-item {
         display: flex;
         align-items: flex-start;
         gap: 24px;
+        opacity: 0;
+        transform: translateY(14px);
     }
+    /* Stagger bullets */
+    .bullet-item:nth-child(1) { animation: fadeUp 600ms ease-out forwards 160ms; }
+    .bullet-item:nth-child(2) { animation: fadeUp 600ms ease-out forwards 260ms; }
+    .bullet-item:nth-child(3) { animation: fadeUp 600ms ease-out forwards 360ms; }
+    .bullet-item:nth-child(4) { animation: fadeUp 600ms ease-out forwards 460ms; }
+    .bullet-item:nth-child(5) { animation: fadeUp 600ms ease-out forwards 560ms; }
+
     .bullet-icon {
         width: 48px;
         height: 48px;
@@ -64,112 +100,206 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 6px 20px rgba(0,0,0,0.25);
+        backdrop-filter: blur(2px);
     }
-    .bullet-icon i {
-        color: #3b82f6;
-        font-size: 20px;
-    }
-    .bullet-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
+    .bullet-icon i { color: var(--accent); font-size: 20px; }
+    .bullet-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
     .bullet-text {
-        font-size: 24px;
+        font-size: 22px;
         color: #e2e8f0;
         line-height: 1.5;
         margin: 0;
         font-weight: 400;
     }
-    .bullet-strong {
-        font-weight: 600;
-        color: #ffffff;
-    }
+    .bullet-strong { font-weight: 700; color: #ffffff; }
+
+    /* Decorative circles */
     .decorative-element {
         position: absolute;
         border-radius: 50%;
-        opacity: 0.04;
+        opacity: 0.06;
         z-index: 0;
+        pointer-events: none;
+        will-change: transform;
+        filter: blur(0.2px);
     }
     .circle-1 {
         width: 350px;
         height: 350px;
-        background-color: #3b82f6;
+        background-color: var(--accent);
         top: -100px;
         right: -80px;
+        animation: floatRight 18s ease-in-out infinite;
     }
     .circle-2 {
         width: 250px;
         height: 250px;
-        background-color: #8b5cf6;
+        background-color: var(--accent-2);
         bottom: -80px;
         left: -60px;
+        animation: floatLeft 20s ease-in-out infinite;
+    }
+
+    /* Bottom navigation: previous (left) & next (right) */
+    .bottom-nav {
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        padding: 16px 24px 26px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 3;
+        background: linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.55) 45%, rgba(15,23,42,0.9) 100%);
+        /* Let buttons be clickable across the full width without blocking scroll (if ever enabled) */
+        pointer-events: none;
+    }
+    .nav-btn {
+        pointer-events: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 20px;
+        border-radius: 999px;
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 16px;
+        box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+        transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    .nav-prev {
+        background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%); /* gray */
+        animation: fadeUp 650ms ease-out forwards 620ms;
+    }
+    .nav-next {
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%); /* blue */
+        animation: fadeUp 650ms ease-out forwards 700ms;
+    }
+    .nav-btn:hover {
+        transform: translateY(0) scale(1.02);
+        box-shadow: 0 16px 36px rgba(0,0,0,0.45);
+        filter: brightness(1.05);
+    }
+
+    /* Keyframes */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-8px) scale(0.995); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes floatRight {
+        0%   { transform: translate(0, 0) scale(1); }
+        50%  { transform: translate(-14px, 10px) scale(1.03); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes floatLeft {
+        0%   { transform: translate(0, 0) scale(1); }
+        50%  { transform: translate(14px, -10px) scale(1.03); }
+        100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes bgPulse {
+        0%   { filter: hue-rotate(0deg) brightness(1); }
+        100% { filter: hue-rotate(6deg) brightness(1.02); }
+    }
+
+    /* Reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
     }
 </style>
 </head>
 <body>
 <div class="slide-container">
-<div class="decorative-element circle-1"></div>
-<div class="decorative-element circle-2"></div>
-<div class="header">
-<h1 class="slide-title"><p>What Is <span class="title-highlight">OpenTitan</span>?</p></h1>
-</div>
-<div class="content-wrapper">
-<div class="bullet-list">
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-microchip"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text"><span class="bullet-strong">Open-source silicon Root of Trust (RoT)</span> — hardware security foundation for systems</p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-shield-alt"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text"><span class="bullet-strong">Dedicated security coprocessor</span> anchoring system trust from boot to runtime</p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-key"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text">Provides <span class="bullet-strong">secure identity, key storage, and cryptographic services</span></p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-eye"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text">Designed for <span class="bullet-strong">transparency, auditability, and verifiability</span></p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-users"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text">Backed by a <span class="bullet-strong">multi-vendor, community-driven project</span></p>
-</div>
-<div class="navigation-buttons mt-10 flex justify-between w-full">
-  <a href="index.html"
-     class="inline-block px-8 py-3 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-lg font-semibold shadow-lg transition">
-    ← Previous Slide
-  </a>
+    <!-- Decorative elements -->
+    <div class="decorative-element circle-1"></div>
+    <div class="decorative-element circle-2"></div>
 
-  <a href="page_2.html"
-     class="inline-block px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold shadow-lg transition">
-    Next Slide →
-  </a>
-</div>
-</div>
-</div>
-</div>
+    <!-- Header -->
+    <div class="header">
+        <!-- “Do the same”: move punctuation to next line -->
+        <h1 class="slide-title">
+            What Is <span class="title-highlight">OpenTitan ?</span>
+        </h1>
+    </div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+        <div class="bullet-list">
+            <div class="bullet-item">
+                <div class="bullet-icon">
+                    <i class="fas fa-microchip" aria-hidden="true"></i>
+                </div>
+                <div class="bullet-content">
+                    <p class="bullet-text">
+                        <span class="bullet-strong">Open-source silicon Root of Trust (RoT)</span> — hardware security foundation for systems
+                    </p>
+                </div>
+            </div>
+
+            <div class="bullet-item">
+                <div class="bullet-icon">
+                    <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                </div>
+                <div class="bullet-content">
+                    <p class="bullet-text">
+                        <span class="bullet-strong">Dedicated security coprocessor</span> anchoring system trust from boot to runtime
+                    </p>
+                </div>
+            </div>
+
+            <div class="bullet-item">
+                <div class="bullet-icon">
+                    <i class="fas fa-key" aria-hidden="true"></i>
+                </div>
+                <div class="bullet-content">
+                    <p class="bullet-text">
+                        Provides <span class="bullet-strong">secure identity, key storage, and cryptographic services</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="bullet-item">
+                <div class="bullet-icon">
+                    <i class="fas fa-eye" aria-hidden="true"></i>
+                </div>
+                <div class="bullet-content">
+                    <p class="bullet-text">
+                        Designed for <span class="bullet-strong">transparency, auditability, and verifiability</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="bullet-item">
+                <div class="bullet-icon">
+                    <i class="fas fa-users" aria-hidden="true"></i>
+                </div>
+                <div class="bullet-content">
+                    <p class="bullet-text">
+                        Backed by a <span class="bullet-strong">multi-vendor, community-driven project</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom-fixed navigation -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-btn nav-prev" aria-label="Previous slide">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            <span>Previous Slide</span>
+        </a>
+
+        <a href="page_2.html" class="nav-btn nav-next" aria-label="Next slide">
+            <span>Next Slide</span>
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        </a>
+    </div>
 </div>
 </body>
 </html>

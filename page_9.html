@@ -1,175 +1,305 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=1280, height=720" name="viewport"/>
 <title>Host Side: Why Rust?</title>
+
+<!-- CSS dependencies -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Inter', sans-serif;
-        overflow: hidden;
-    }
-    .slide-container {
-        width: 100vw;   /* full viewport width */
-        height: 100vh;  /* full viewport height */
-        background-color: #0f172a;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-    }
-    .header {
-        padding: 50px 80px 30px 80px;
-        border-bottom: 2px solid rgba(59, 130, 246, 0.3);
-    }
-    .slide-title {
-        font-size: 48px;
-        font-weight: 700;
-        color: #ffffff;
-        margin: 0;
-    }
-    .title-highlight {
-        color: #3b82f6;
-    }
-    .content-wrapper {
-        flex: 1;
-        padding: 50px 80px 60px 80px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    .bullet-list {
-        display: flex;
-        flex-direction: column;
-        gap: 28px;
-    }
-    .bullet-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 24px;
-    }
-    .bullet-icon {
-        width: 48px;
-        height: 48px;
-        background-color: rgba(59, 130, 246, 0.15);
-        border: 2px solid rgba(59, 130, 246, 0.4);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .bullet-icon i {
-        color: #3b82f6;
-        font-size: 20px;
-    }
-    .bullet-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    .bullet-text {
-        font-size: 24px;
-        color: #e2e8f0;
-        line-height: 1.5;
-        margin: 0;
-        font-weight: 400;
-    }
-    .bullet-strong {
-        font-weight: 600;
-        color: #ffffff;
-    }
-    .decorative-element {
-        position: absolute;
-        border-radius: 50%;
-        opacity: 0.04;
-        z-index: 0;
-    }
-    .circle-1 {
-        width: 350px;
-        height: 350px;
-        background-color: #3b82f6;
-        top: -100px;
-        right: -80px;
-    }
-    .circle-2 {
-        width: 250px;
-        height: 250px;
-        background-color: #8b5cf6;
-        bottom: -80px;
-        left: -60px;
-    }
+  :root{
+    --bg:#0f172a;
+    --blue:#3b82f6;
+    --violet:#8b5cf6;
+    --text:#ffffff;
+    --muted:#e2e8f0;
+
+    /* Reserve space so content never overlaps the bottom nav (no scrollbars) */
+    --bottom-nav-height: 68px;
+    --bottom-padding-extra: 18px;
+  }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden; /* no page scrollbars */
+    background-color: var(--bg);
+    color: var(--text);
+  }
+
+  .slide-container {
+    width: 100vw;   /* full viewport width */
+    height: 100vh;  /* full viewport height */
+    background-color: var(--bg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .header {
+    padding: 50px 80px 30px 80px;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+    position: relative;
+    z-index: 2;
+  }
+
+  .slide-title {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+
+    /* animation */
+    opacity: 0;
+    transform: translateY(-8px);
+    animation: fadeInDown 700ms ease-out forwards 120ms;
+    text-wrap: balance;
+  }
+  .title-highlight { color: var(--blue); }
+  .punct { display: inline-block; }
+
+  .content-wrapper {
+    flex: 1;
+    padding: 50px 80px calc(var(--bottom-nav-height) + var(--bottom-padding-extra));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    position: relative;
+    z-index: 2;
+    overflow: hidden; /* keep it clean: no inner scrollbars */
+  }
+
+  .bullet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px; /* slightly tighter to fit nicely */
+  }
+
+  .bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+
+    /* entrance animation base */
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  /* Staggered bullet entrance */
+  .bullet-item:nth-child(1) { animation: fadeUp 600ms ease-out forwards 200ms; }
+  .bullet-item:nth-child(2) { animation: fadeUp 600ms ease-out forwards 300ms; }
+  .bullet-item:nth-child(3) { animation: fadeUp 600ms ease-out forwards 400ms; }
+  .bullet-item:nth-child(4) { animation: fadeUp 600ms ease-out forwards 500ms; }
+  .bullet-item:nth-child(5) { animation: fadeUp 600ms ease-out forwards 600ms; }
+
+  .bullet-icon {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(59, 130, 246, 0.15);
+    border: 2px solid rgba(59, 130, 246, 0.4);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .bullet-icon i {
+    color: #3b82f6;
+    font-size: 20px;
+  }
+
+  .bullet-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .bullet-text {
+    font-size: 24px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 400;
+  }
+  .bullet-strong {
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* Decorative circles — add gentle float for life */
+  .decorative-element {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.05;
+    z-index: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+    filter: blur(0.2px);
+  }
+  .circle-1 {
+    width: 350px;
+    height: 350px;
+    background-color: #3b82f6;
+    top: -100px;
+    right: -80px;
+    animation: floatRight 18s ease-in-out infinite;
+  }
+  .circle-2 {
+    width: 250px;
+    height: 250px;
+    background-color: #8b5cf6;
+    bottom: -80px;
+    left: -60px;
+    animation: floatLeft 20s ease-in-out infinite;
+  }
+
+  /* Bottom navigation (existing buttons, add hover micro-interaction) */
+  .navigation-buttons a {
+    transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+  }
+  .navigation-buttons a:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.35);
+  }
+
+  /* Tighter layout on shorter viewports (optional) */
+  @media (max-height: 640px) {
+    .header { padding: 42px 70px 22px 70px; }
+    .slide-title { font-size: 44px; }
+    .content-wrapper { padding: 42px 70px calc(var(--bottom-nav-height) + 12px); }
+    .bullet-text { font-size: 23px; }
+  }
+
+  /* Keyframes */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px) scale(0.995); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes floatRight {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(-14px, 10px) scale(1.03); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+  @keyframes floatLeft {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(14px, -10px) scale(1.03); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .slide-title, .bullet-item { opacity: 1 !important; transform: none !important; }
+  }
 </style>
 </head>
 <body>
 <div class="slide-container">
-<div class="decorative-element circle-1"></div>
-<div class="decorative-element circle-2"></div>
-<div class="header">
-<h1 class="slide-title"><p>Host Side: Why <span class="title-highlight">Rust</span>?</p></h1>
-</div>
-<div class="content-wrapper">
-<div class="bullet-list">
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-border-none"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text"><span class="bullet-strong">Operates outside the trust boundary</span> — handles protocols and parsing</p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-lock"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text"><span class="bullet-strong">Memory safety by default</span> prevents common classes of bugs</p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-sitemap"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text"><span class="bullet-strong">Strong type system</span> and modern error handling improve reliability</p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-tachometer-alt"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text"><span class="bullet-strong">Zero-cost abstractions</span> — performance near C/C++</p>
-</div>
-</div>
-<div class="bullet-item">
-<div class="bullet-icon">
-<i class="fas fa-project-diagram"></i>
-</div>
-<div class="bullet-content">
-<p class="bullet-text"><span class="bullet-strong">Safer concurrency</span> for multi-threaded host interactions</p>
-</div>
-<div class="navigation-buttons mt-10 flex justify-between w-full">
-  <a href="page_8.html"
-     class="inline-block px-8 py-3 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-lg font-semibold shadow-lg transition">
-    ← Previous Slide
-  </a>
+  <!-- Decorative elements -->
+  <div class="decorative-element circle-1"></div>
+  <div class="decorative-element circle-2"></div>
 
-  <a href="page_10.html"
-     class="inline-block px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold shadow-lg transition">
-    Next Slide →
-  </a>
-</div>
-</div>
-</div>
-</div>
+  <!-- Header -->
+  <div class="header">
+    <!-- Question mark on its own line; remove <br> if you prefer inline -->
+    <h1 class="slide-title">
+      Host Side: Why <span class="title-highlight">Rust</span><br>
+      <span class="punct">?</span>
+    </h1>
+  </div>
+
+  <!-- Content -->
+  <div class="content-wrapper">
+    <div class="bullet-list">
+
+      <div class="bullet-item">
+        <div class="bullet-icon">
+          <!-- Replace invalid 'fa-border-none' with a FA6 Free icon -->
+          <i class="fas fa-diagram-project" aria-hidden="true"></i>
+        </div>
+        <div class="bullet-content">
+          <p class="bullet-text">
+            <span class="bullet-strong">Operates outside the trust boundary</span> — handles protocols and parsing
+          </p>
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-icon">
+          <i class="fas fa-lock" aria-hidden="true"></i>
+        </div>
+        <div class="bullet-content">
+          <p class="bullet-text">
+            <span class="bullet-strong">Memory safety by default</span> prevents common classes of bugs
+          </p>
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-icon">
+          <i class="fas fa-sitemap" aria-hidden="true"></i>
+        </div>
+        <div class="bullet-content">
+          <p class="bullet-text">
+            <span class="bullet-strong">Strong type system</span> and modern error handling improve reliability
+          </p>
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-icon">
+          <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+        </div>
+        <div class="bullet-content">
+          <p class="bullet-text">
+            <span class="bullet-strong">Zero-cost abstractions</span> — performance near C/C++
+          </p>
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-icon">
+          <i class="fas fa-project-diagram" aria-hidden="true"></i>
+        </div>
+        <div class="bullet-content">
+          <p class="bullet-text">
+            <span class="bullet-strong">Safer concurrency</span> for multi-threaded host interactions
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom-fixed navigation (existing buttons) -->
+  <div class="navigation-buttons mt-10 flex justify-between w-full">
+    <a href="page_8.html"
+        class="inline-block px-8 py-3 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-lg font-semibold shadow-lg transition">
+        ← Previous Slide
+    </a>
+
+    <a href="page_10.html"
+        class="inline-block px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold shadow-lg transition">
+        Next Slide →
+    </a>
+  </div>
 </div>
 </body>
 </html>

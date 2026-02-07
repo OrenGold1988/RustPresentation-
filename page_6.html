@@ -1,195 +1,357 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=1280, height=720" name="viewport"/>
-<title>Benefits of Open Source Security Hardware</title>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet"/>
-<style>
+  <meta charset="utf-8"/>
+  <meta content="width=1280, height=720" name="viewport"/>
+  <title>Benefits of Open Source Security Hardware</title>
+
+  <!-- CSS dependencies -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --bg:#0f172a;
+      --blue:#3b82f6;
+      --green:#10b981;
+      --text:#ffffff;
+      --muted:#cbd5e1;
+
+      /* Bottom nav height used only to reserve space (no scrollbars) */
+      --bottom-nav-height: 68px;      /* slightly smaller than before */
+      --bottom-padding-extra: 18px;   /* breathing room above nav */
+    }
+
+    html, body { height: 100%; }
     body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Inter', sans-serif;
-        overflow: hidden;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow: hidden; /* no page scrollbars */
     }
+
     .slide-container {
-        width: 100vw;   /* full viewport width */
-        height: 100vh;  /* full viewport height */
-        background-color: #0f172a;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
     }
+
     .header {
-        padding: 40px 80px 25px 80px;
-        border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+      padding: 34px 70px 20px 70px; /* slightly tighter */
+      border-bottom: 2px solid rgba(59,130,246,0.3);
+      position: relative;
+      z-index: 2;
+      flex-shrink: 0;
     }
+
     .slide-title {
-        font-size: 44px;
-        font-weight: 700;
-        color: #ffffff;
-        margin: 0;
+      font-size: 50px;          /* was 44px */
+      font-weight: 800;
+      line-height: 1.15;
+      margin: 0;
+      color: var(--text);
+      letter-spacing: -0.02em;
+
+      /* animation */
+      opacity: 0;
+      transform: translateY(-8px);
+      animation: fadeInDown 700ms ease-out forwards 120ms;
+      text-wrap: balance;
     }
-    .title-highlight {
-        color: #3b82f6;
-    }
+    .title-highlight { color: var(--blue); }
+
+    /* Content area — no scrolling; we reserve space at the bottom so it never overlaps the nav */
     .content-wrapper {
-        flex: 1;
-        padding: 40px 80px 50px 80px;
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
+      flex: 1 1 auto;
+      padding: 30px 70px calc(var(--bottom-nav-height) + var(--bottom-padding-extra)); /* smaller all around */
+      display: flex;
+      flex-direction: column;
+      gap: 22px; /* was 30px */
+      position: relative;
+      z-index: 2;
+      overflow: hidden; /* no inner scrollbar */
     }
+
     .features-grid-top {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px; /* was 20px */
     }
+
     .features-grid-bottom {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        max-width: 880px;
-        margin: 0 auto;
-        width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px; /* was 20px */
+      max-width: 860px; /* slightly narrower */
+      margin: 0 auto;
+      width: 100%;
     }
+
     .feature-card {
-        background-color: rgba(59, 130, 246, 0.08);
-        border: 1px solid rgba(59, 130, 246, 0.3);
-        border-radius: 10px;
-        padding: 26px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        align-items: center;
-        text-align: center;
+      background-color: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 10px;
+      padding: 22px;             /* was 26px */
+      display: flex;
+      flex-direction: column;
+      gap: 12px;                 /* was 16px */
+      align-items: center;
+      text-align: center;
+
+      /* entrance */
+      opacity: 0;
+      transform: translateY(12px);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.18);
     }
+
+    /* Staggered entrances: top row then bottom row */
+    .features-grid-top .feature-card:nth-child(1) { animation: fadeUp 600ms ease-out forwards 180ms; }
+    .features-grid-top .feature-card:nth-child(2) { animation: fadeUp 600ms ease-out forwards 250ms; }
+    .features-grid-top .feature-card:nth-child(3) { animation: fadeUp 600ms ease-out forwards 320ms; }
+
+    .features-grid-bottom .feature-card:nth-child(1) { animation: fadeUp 600ms ease-out forwards 400ms; }
+    .features-grid-bottom .feature-card:nth-child(2) { animation: fadeUp 600ms ease-out forwards 470ms; }
+
+    .feature-card:hover {
+      transform: translateY(9px); /* subtle glide */
+      transition: transform 280ms ease;
+    }
+
     .feature-icon-box {
-        width: 64px;
-        height: 64px;
-        background-color: rgba(59, 130, 246, 0.2);
-        border: 2px solid rgba(59, 130, 246, 0.5);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
+      width: 56px;               /* was 64px */
+      height: 56px;
+      background-color: rgba(59,130,246,0.2);
+      border: 2px solid rgba(59,130,246,0.5);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
     }
     .feature-icon-box i {
-        color: #3b82f6;
-        font-size: 28px;
+      font-size: 24px;           /* was 28px */
+      color: var(--blue);
     }
-    .feature-content {
-        flex: 1;
-    }
+
     .feature-title {
-        font-size: 19px;
-        font-weight: 700;
-        color: #ffffff;
-        margin: 0 0 10px 0;
+      font-size: 20px;           /* was 19px */
+      font-weight: 700;
+      margin: 0 0 8px 0;         /* was 10px */
+      color: var(--text);
     }
     .feature-description {
-        font-size: 14px;
-        color: #cbd5e1;
-        line-height: 1.5;
-        margin: 0;
-        font-weight: 400;
+      font-size: 13px;           /* was 14px */
+      color: var(--muted);
+      line-height: 1.45;         /* was 1.5 */
+      margin: 0;
     }
+
+    /* Decorative circles — now gently floating */
     .decorative-element {
-        position: absolute;
-        border-radius: 50%;
-        opacity: 0.04;
-        z-index: 0;
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.05;
+      z-index: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+      filter: blur(0.15px);
     }
     .circle-1 {
-        width: 350px;
-        height: 350px;
-        background-color: #3b82f6;
-        top: -100px;
-        right: -80px;
+      width: 320px;              /* a bit smaller to save space */
+      height: 320px;
+      background-color: var(--blue);
+      top: -90px;
+      right: -70px;
+      animation: floatRight 18s ease-in-out infinite;
     }
     .circle-2 {
-        width: 250px;
-        height: 250px;
-        background-color: #10b981;
-        bottom: -80px;
-        left: -60px;
+      width: 230px;              /* a bit smaller */
+      height: 230px;
+      background-color: var(--green);
+      bottom: -70px;
+      left: -50px;
+      animation: floatLeft 20s ease-in-out infinite;
     }
-</style>
-</head>
-<body>
-<div class="slide-container">
-<div class="decorative-element circle-1"></div>
-<div class="decorative-element circle-2"></div>
-<div class="header">
-<h1 class="slide-title"><p><span class="title-highlight">Benefits</span> of Open Source Security Hardware</p></h1>
-</div>
-<div class="content-wrapper">
-<div class="features-grid-top">
-<div class="feature-card">
-<div class="feature-icon-box">
-<i class="fas fa-search"></i>
-</div>
-<div class="feature-content">
-<h3 class="feature-title"><p>Faster Vulnerability Discovery</p></h3>
-<p class="feature-description">Open inspection enables rapid identification and remediation of security flaws by global experts</p>
-</div>
-</div>
-<div class="feature-card">
-<div class="feature-icon-box">
-<i class="fas fa-users"></i>
-</div>
-<div class="feature-content">
-<h3 class="feature-title"><p>Community-Driven Improvements</p></h3>
-<p class="feature-description">Collaborative development accelerates innovation and enhances design quality through diverse contributions</p>
-</div>
-</div>
-<div class="feature-card">
-<div class="feature-icon-box">
-<i class="fas fa-balance-scale"></i>
-</div>
-<div class="feature-content">
-<h3 class="feature-title"><p>Vendor-Neutral Design</p></h3>
-<p class="feature-description">Independent governance prevents single-vendor control and ensures long-term project sustainability</p>
-</div>
-</div>
-</div>
-<div class="features-grid-bottom">
-<div class="feature-card">
-<div class="feature-icon-box">
-<i class="fas fa-unlock"></i>
-</div>
-<div class="feature-content">
-<h3 class="feature-title"><p>Avoids Proprietary Lock-In</p></h3>
-<p class="feature-description">Freedom to modify, integrate, and customize without licensing restrictions or vendor dependencies</p>
-</div>
-</div>
-<div class="feature-card">
-<div class="feature-icon-box">
-<i class="fas fa-graduation-cap"></i>
-</div>
-<div class="feature-content">
-<h3 class="feature-title"><p>Academic &amp; Industry Research</p></h3>
-<p class="feature-description">Open design enables reproducible research, formal verification, and security analysis methodologies</p>
-</div>
-<div class="navigation-buttons mt-10 flex justify-between w-full">
-  <a href="page_5.html"
-     class="inline-block px-8 py-3 rounded-full bg-gray-600 hover:bg-gray-700 text-white text-lg font-semibold shadow-lg transition">
-    ← Previous Slide
-  </a>
 
-  <a href="page_7.html"
-     class="inline-block px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold shadow-lg transition">
-    Next Slide →
-  </a>
-</div>
-</div>
-</div>
-</div>
-</div>
+    /* Bottom navigation (fixed overlay) */
+    .bottom-nav {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: var(--bottom-nav-height);
+      padding: 12px 22px; /* matches --bottom-nav-height */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 3;
+      background: linear-gradient(
+        180deg,
+        rgba(15,23,42,0) 0%,
+        rgba(15,23,42,0.65) 50%,
+        rgba(15,23,42,0.95) 100%
+      );
+      box-sizing: border-box;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;        /* slightly smaller pills */
+      border-radius: 999px;
+      font-weight: 700;
+      color: #fff;
+      font-size: 15px;           /* was 16px */
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      white-space: nowrap;
+
+      /* hover lift */
+      transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+    }
+    .nav-prev { background-color: #4b5563; }      /* gray-600 */
+    .nav-prev:hover { background-color: #374151; transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 14px 28px rgba(0,0,0,0.35); }
+    .nav-next { background-color: var(--blue); }
+    .nav-next:hover { background-color: #2563eb; transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 14px 28px rgba(0,0,0,0.35); }
+
+    /* Keyframes */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-10px) scale(0.995); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes floatRight {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(-14px, 10px) scale(1.03); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    @keyframes floatLeft {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(14px, -10px) scale(1.03); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    /* Safety: if viewport height is tight, shave a bit more spacing */
+    @media (max-height: 640px) {
+      .header { padding: 28px 60px 16px 60px; }
+      .slide-title { font-size: 38px; }
+      .content-wrapper { padding: 24px 60px calc(var(--bottom-nav-height) + 12px); }
+    }
+
+    /* Reduced-motion users */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      .slide-title, .feature-card { opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="slide-container">
+
+    <!-- Decorative circles -->
+    <div class="decorative-element circle-1"></div>
+    <div class="decorative-element circle-2"></div>
+
+    <!-- Header -->
+    <div class="header">
+      <h1 class="slide-title">
+        <span class="title-highlight">Benefits</span><br>
+        of Open Source Security Hardware
+      </h1>
+    </div>
+
+    <!-- Content (no scrollbars; sized to fit) -->
+    <div class="content-wrapper">
+
+      <div class="features-grid-top">
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <i class="fas fa-search" aria-hidden="true"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">Faster Vulnerability Discovery</h3>
+            <p class="feature-description">
+              Open inspection enables rapid identification and remediation of security flaws by global experts
+            </p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <i class="fas fa-users" aria-hidden="true"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">Community-Driven Improvements</h3>
+            <p class="feature-description">
+              Collaborative development accelerates innovation and improves design quality
+            </p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <i class="fas fa-balance-scale" aria-hidden="true"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">Vendor-Neutral Design</h3>
+            <p class="feature-description">
+              Independent governance prevents vendor lock-in and ensures long-term sustainability
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="features-grid-bottom">
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <i class="fas fa-unlock" aria-hidden="true"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">Avoids Proprietary Lock-In</h3>
+            <p class="feature-description">
+              Freedom to modify, integrate, and customize without licensing restrictions
+            </p>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">Academic &amp; Industry Research</h3>
+            <p class="feature-description">
+              Open designs enable reproducible research, verification, and security analysis
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom-fixed navigation -->
+    <div class="bottom-nav">
+      <a class="nav-btn nav-prev" href="page_5.html" aria-label="Previous Slide">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        <span>Previous Slide</span>
+      </a>
+
+      <a class="nav-btn nav-next" href="page_7.html" aria-label="Next Slide">
+        <span>Next Slide</span>
+        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    </div>
+
+  </div>
 </body>
 </html>
