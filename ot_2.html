@@ -3,221 +3,208 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=1280, height=720" name="viewport"/>
-<title>OpenTitan Chip Purpose and Protections</title>
+<title>OpenTitan: Pros & Cons</title>
+
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 
 <style>
-    :root{
+    :root {
         --bg:#0f172a;
         --blue:#3b82f6;
-        --green:#10b981;
-        --purple:#8b5cf6;
+        --red:#ef4444;
         --text:#ffffff;
         --muted:#cbd5e1;
         --nav-height: 80px;
-        --gold:#f59e0b;
+        --accent:#3b82f6;
     }
 
-    html, body { height: 100%; }
+    html, body { height: 100%; overflow: hidden; background-color: var(--bg); }
     body {
         margin: 0; padding: 0;
         font-family: 'Inter', sans-serif;
-        overflow: hidden;
-        background-color: var(--bg);
         color: var(--text);
+        background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, var(--bg) 100%);
     }
 
     .slide-container {
         width: 100vw; height: 100vh;
         display: flex; flex-direction: column;
-        position: relative; overflow: hidden;
-        isolation: isolate;
+        position: relative;
     }
 
     .header {
-        padding: 40px 80px 20px 80px;
-        border-bottom: 2px solid rgba(59, 130, 246, 0.3);
-        position: relative; z-index: 2;
-        flex-shrink: 0;
+        padding: 40px 60px 20px 60px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
     }
 
     .slide-title {
-        font-size: 40px; font-weight: 800;
-        line-height: 1.1; letter-spacing: -0.02em;
-        opacity: 0; transform: translateY(-8px);
-        animation: fadeInDown 700ms ease-out forwards 120ms;
-    }
-    .title-highlight { color: var(--blue); }
-    .title-badge { 
-        font-size: 16px; background: rgba(245, 158, 11, 0.2); 
-        color: var(--gold); border: 1px solid var(--gold);
-        padding: 4px 12px; border-radius: 999px; vertical-align: middle;
-        margin-left: 15px; text-transform: uppercase; letter-spacing: 1px;
-    }
-    .content-wrapper {
-        flex: 1;
-        padding: 30px 80px calc(var(--nav-height) + 10px) 80px;
-        display: flex; flex-direction: column;
-        justify-content: center;
-        gap: 25px; position: relative; z-index: 2;
+        font-size: 48px; font-weight: 800; margin: 0;
+        letter-spacing: -0.02em;
+        animation: fadeInDown 700ms ease-out forwards;
     }
 
-    .features-grid {
-        display: grid; grid-template-columns: repeat(3, 1fr);
+    /* THE EXPANSION FIX: Large Grid with centered content */
+    .content-grid {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        padding: 40px 60px 100px 60px; /* Space for bottom nav */
+    }
+
+    .column {
+        display: flex;
+        flex-direction: column;
         gap: 20px;
     }
 
-    .feature-card {
-        background-color: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 10px;
-        padding: 20px; display: flex;
-        flex-direction: column;
-        gap: 12px;
-        opacity: 0; transform: translateY(12px);
-        box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+    .column-title {
+        font-size: 32px; font-weight: 800;
+        margin-bottom: 20px; 
+        display: flex; align-items: center; justify-content: center; gap: 15px;
+        text-transform: uppercase; letter-spacing: 2px;
     }
 
-    /* Staggered animation delays for 5 cards */
-    .feature-card:nth-child(1) { animation: fadeUp 600ms ease-out forwards 180ms; }
-    .feature-card:nth-child(2) { animation: fadeUp 600ms ease-out forwards 260ms; }
-    .feature-card:nth-child(3) { animation: fadeUp 600ms ease-out forwards 340ms; }
-    .feature-card:nth-child(4) { animation: fadeUp 600ms ease-out forwards 420ms; }
-    .feature-card:nth-child(5) { animation: fadeUp 600ms ease-out forwards 500ms; }
+    .list-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 25px;
+        display: flex; gap: 25px; 
+        align-items: center;
+        opacity: 0; transform: translateY(20px);
+        transition: transform 0.3s ease;
+    }
+
+    .list-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Animation Timings */
+    .pro-item:nth-child(2) { animation: fadeUp 600ms forwards 200ms; }
+    .pro-item:nth-child(3) { animation: fadeUp 600ms forwards 350ms; }
+    .pro-item:nth-child(4) { animation: fadeUp 600ms forwards 500ms; }
     
-    .tpm-highlight { 
-        background-color: rgba(139, 92, 246, 0.08); 
-        border: 1px solid rgba(139, 92, 246, 0.3);
-        grid-column: span 1;
+    .con-item:nth-child(2) { animation: fadeUp 600ms forwards 650ms; }
+    .con-item:nth-child(3) { animation: fadeUp 600ms forwards 800ms; }
+    .con-item:nth-child(4) { animation: fadeUp 600ms forwards 950ms; }
+
+    .icon-box {
+        width: 64px; height: 64px; border-radius: 14px;
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        font-size: 28px;
     }
 
-    .feature-icon-box {
-        width: 44px; height: 44px;
-        background-color: rgba(59, 130, 246, 0.2);
-        border: 1px solid rgba(59, 130, 246, 0.5);
-        border-radius: 8px; display: flex;
-        align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .feature-icon-box i { color: var(--blue); font-size: 20px; }
-    .tpm-icon i { color: var(--purple); }
-    .tpm-icon-box { background-color: rgba(139, 92, 246, 0.2); border-color: rgba(139, 92, 246, 0.5); }
+    .pro-icon { background: rgba(59, 130, 246, 0.15); border: 2px solid var(--blue); color: var(--blue); }
+    .con-icon { background: rgba(239, 68, 68, 0.15); border: 2px solid var(--red); color: var(--red); }
 
-    .feature-title { font-size: 18px; font-weight: 700; margin: 0; }
-    .feature-description { font-size: 14px; color: var(--muted); line-height: 1.4; margin: 0; }
-
-    .protections-section {
-        background-color: rgba(16, 185, 129, 0.08);
-        border: 2px solid rgba(16, 185, 129, 0.3);
-        border-radius: 10px; padding: 20px 28px;
-        opacity: 0; transform: translateY(10px);
-        animation: fadeUp 650ms ease-out forwards 580ms; /* Slightly delayed for card sequence */
-    }
-
-    .protections-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
-    .protections-icon {
-        width: 40px; height: 40px; background-color: rgba(16, 185, 129, 0.2);
-        border-radius: 8px; display: flex; align-items: center; justify-content: center;
-    }
-    .protections-icon i { color: var(--green); font-size: 20px; }
-    .protections-title { font-size: 18px; font-weight: 700; margin: 0; }
-
-    .protections-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    .protection-item {
-        background-color: rgba(16, 185, 129, 0.12);
-        border: 1px solid rgba(16, 185, 129, 0.35);
-        border-radius: 6px; padding: 10px 14px;
-        display: flex; align-items: center; gap: 10px;
-    }
-    .protection-text { font-size: 13px; color: #e2e8f0; font-weight: 500; margin: 0; }
+    .item-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; display: block; }
+    .item-desc { font-size: 19px; color: var(--muted); line-height: 1.5; }
+    
+    .accent-text-blue { color: var(--blue); font-weight: 700; }
+    .accent-text-red { color: var(--red); font-weight: 700; }
 
     .bottom-nav {
         position: fixed; bottom: 0; left: 0; right: 0;
         height: var(--nav-height); padding: 0 60px;
         display: flex; justify-content: space-between; align-items: center;
-        background: linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.95) 100%);
-        z-index: 100; pointer-events: none;
+        background: linear-gradient(0deg, rgba(15,23,42,1) 30%, rgba(15,23,42,0) 100%);
+        z-index: 100;
     }
 
     .nav-btn {
         pointer-events: auto; display: inline-flex; align-items: center; gap: 10px;
-        padding: 10px 22px; border-radius: 999px; color: white; text-decoration: none;
-        font-weight: 700; font-size: 16px; box-shadow: 0 8px 22px rgba(0,0,0,0.35);
-        transition: all 180ms ease;
+        padding: 12px 28px; border-radius: 999px; font-weight: 700; color: white;
+        text-decoration: none; transition: all 180ms ease;
+        font-size: 18px;
     }
-    .nav-prev { background-color: #4b5563; }
-    .nav-next { background-color: #2563eb; }
-    .nav-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .nav-prev { background: #4b5563; }
+    .nav-next { background: var(--blue); }
+    .nav-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
 
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
+
 <body>
 <div class="slide-container">
     <div class="header">
-        <h1 class="slide-title">
-            <span class="title-highlight">OpenTitan</span><br>
-            Silicon Roles and Protections
-            <span class="title-badge">Market Milestone</span>
-        </h1>
+        <h1 class="slide-title">Open Source Hardware: <span style="color:var(--blue)">Strategic Trade-offs</span></h1>
     </div>
 
-    <div class="content-wrapper">
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon-box"><i class="fas fa-check-circle"></i></div>
-                <h3 class="feature-title">Secure Boot</h3>
-                <p class="feature-description">The "first link" in the chain: verifies firmware signatures before allowing the system to start.</p>
+    
+
+    <div class="content-grid">
+        <div class="column">
+            <h2 class="column-title" style="color: var(--blue)">
+                <i class="fas fa-check-circle"></i> The Pros
+            </h2>
+            
+            <div class="list-item pro-item">
+                <div class="icon-box pro-icon"><i class="fas fa-eye"></i></div>
+                <div>
+                    <span class="item-title">Verifiable Security</span>
+                    <p class="item-desc">Public RTL code enables global auditing to ensure there are <span class="accent-text-blue">zero hidden backdoors</span> or logical vulnerabilities.</p>
+                </div>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon-box"><i class="fas fa-id-card"></i></div>
-                <h3 class="feature-title">Identity & Attestation</h3>
-                <p class="feature-description">Provides a unique cryptographic fingerprint for remote servers to verify the device's health.</p>
+            <div class="list-item pro-item">
+                <div class="icon-box pro-icon"><i class="fas fa-chart-line"></i></div>
+                <div>
+                    <span class="item-title">Shared R&D Ecosystem</span>
+                    <p class="item-desc">Industry partners distribute the <span class="accent-text-blue">multi-million dollar burden</span> of security research and validation.</p>
+                </div>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon-box"><i class="fas fa-key"></i></div>
-                <h3 class="feature-title">Key Management</h3>
-                <p class="feature-description">Generates and stores high-entropy keys that never leave the physical silicon.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon-box"><i class="fas fa-microchip"></i></div>
-                <h3 class="feature-title">Hardened Crypto</h3>
-                <p class="feature-description">Dedicated circuits for AES and SHA to prevent side-channel timing leaks.</p>
-            </div>
-
-            <div class="feature-card tpm-highlight">
-                <div class="feature-icon-box tpm-icon-box"><i class="fas fa-vault tpm-icon"></i></div>
-                <h3 class="feature-title" style="color:var(--purple)">Integrated TPM</h3>
-                <p class="feature-description">
-                    <strong>TPM (Trusted Platform Module)</strong> is a global standard for a secure cryptoprocessor. 
-                    OpenTitan acts as a TPM to provide a secure "vault" for platform passwords, certificates, and encryption keys.
-                </p>
+            <div class="list-item pro-item">
+                <div class="icon-box pro-icon"><i class="fas fa-users"></i></div>
+                <div>
+                    <span class="item-title">Community Hardening</span>
+                    <p class="item-desc">A diverse global community identifies and patches security flaws significantly faster than any closed-source team.</p>
+                </div>
             </div>
         </div>
 
-        <div class="protections-section">
-            <div class="protections-header">
-                <div class="protections-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3 class="protections-title">Defense Against Specialized Threats</h3>
+        <div class="column">
+            <h2 class="column-title" style="color: var(--red)">
+                <i class="fas fa-exclamation-triangle"></i> The Cons
+            </h2>
+
+            <div class="list-item con-item">
+                <div class="icon-box con-icon"><i class="fas fa-microchip"></i></div>
+                <div>
+                    <span class="item-title">Implementation Gap</span>
+                    <p class="item-desc">Logic is open, but physical layout and timing are still tied to <span class="accent-text-red">proprietary foundry processes</span>.</p>
+                </div>
             </div>
-            <div class="protections-grid">
-                <div class="protection-item"><i class="fas fa-bug"></i><p class="protection-text">Malicious Software</p></div>
-                <div class="protection-item"><i class="fas fa-hammer"></i><p class="protection-text">Physical Probing</p></div>
-                <div class="protection-item"><i class="fas fa-bolt"></i><p class="protection-text">Glitching/Faults</p></div>
-                <div class="protection-item"><i class="fas fa-broadcast-tower"></i><p class="protection-text">Side-Channel Leaks</p></div>
+
+            <div class="list-item con-item">
+                <div class="icon-box con-icon"><i class="fas fa-wallet"></i></div>
+                <div>
+                    <span class="item-title">High Manufacturing Bar</span>
+                    <p class="item-desc">Silicon isn't software. It requires <span class="accent-text-red">massive capital</span> for tape-outs, foundries, and supply chain logistics.</p>
+                </div>
+            </div>
+
+            <div class="list-item con-item">
+                <div class="icon-box con-icon"><i class="fas fa-handshake-slash"></i></div>
+                <div>
+                    <span class="item-title">Governance Complexity</span>
+                    <p class="item-desc">Aligning multiple global stakeholders is difficult; disagreements can lead to <span class="accent-text-red">project forks</span> or fragmentation.</p>
+                </div>
             </div>
         </div>
     </div>
 
-  <div class="bottom-nav">
-    <a class="nav-btn nav-prev" href="ot_1.html"><i class="fas fa-arrow-left"></i> Previous Slide</a>
-    <a class="nav-btn nav-next" href="ot_3.html">Next Slide <i class="fas fa-arrow-right"></i></a>
-  </div>
+    <div class="bottom-nav">
+        <a class="nav-btn nav-prev" href="ot_1.html"><i class="fas fa-arrow-left"></i><span>Previous Slide</span></a>
+        <a class="nav-btn nav-next" href="ot_3.html"><span>Next Slide</span><i class="fas fa-arrow-right"></i></a>
+    </div>
 </div>
 </body>
 </html>

@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=1280, height=720" name="viewport"/>
-<title>Validation Framework: Architecture & Implementation</title>
+<title>Validation Framework: Language Selection</title>
+
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet"/>
 
 <style>
   :root{
@@ -15,7 +16,6 @@
     --green:#10b981;
     --orange:#fb923c;
     --violet:#8b5cf6;
-    --slate:#94a3b8;
     --text:#ffffff;
     --muted:#cbd5e1;
     --nav-height: 80px;
@@ -36,119 +36,80 @@
     position: relative; overflow: hidden;
   }
 
+  /* FIXED: Title aligned to the left */
   .header {
-    padding: 50px 80px 30px 80px;
+    padding: 40px 80px 20px 80px;
     border-bottom: 2px solid rgba(59, 130, 246, 0.3);
     text-align: left;
     animation: fadeInDown 0.8s ease-out both;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
   }
 
   .slide-title {
-    font-size: 52px; font-weight: 800;
+    font-size: 44px; font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 1.1;
   }
-  .title-highlight { color: #3b82f6; }
-  
-  .side-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--orange);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    border-left: 4px solid var(--orange);
-    padding-left: 20px;
-    margin-bottom: 5px;
-  }
+  .title-highlight { color: var(--blue); }
 
   .content-wrapper {
     flex: 1;
-    padding: 40px 80px calc(var(--nav-height) + 40px) 80px;
+    padding: 30px 80px calc(var(--nav-height) + 10px) 80px;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    gap: 25px;
+  }
+
+  .comparison-grid {
     display: grid;
-    grid-template-columns: 1fr 320px; /* Split for main content and sidebar */
+    grid-template-columns: 1fr 1fr;
     gap: 40px;
-    align-items: center;
-    width: 100%;
-  }
-
-  .architecture-container {
-    display: flex; 
-    flex-direction: column;
-    gap: 30px;
-    width: 100%;
-  }
-
-  .comp-row {
-    display: flex;
-    gap: 20px;
     align-items: stretch;
   }
 
-  .component-box {
-    flex: 1; border-radius: 20px; padding: 30px;
-    display: flex; flex-direction: column; gap: 20px;
+  .side-card {
+    border-radius: 20px;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.4);
     animation: fadeUp 0.8s ease-out both;
   }
 
-  .host-box { background-color: rgba(251, 146, 60, 0.1); border: 2px solid rgba(251, 146, 60, 0.4); }
-  .core-box { background-color: rgba(16, 185, 129, 0.1); border: 2px solid rgba(16, 185, 129, 0.4); }
+  .host-card { background-color: rgba(251, 146, 60, 0.05); border: 2px solid rgba(251, 146, 60, 0.3); }
+  .core-card { background-color: rgba(16, 185, 129, 0.05); border: 2px solid rgba(16, 185, 129, 0.3); }
 
-  .component-header { display: flex; align-items: center; gap: 20px; }
-  .component-icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px;}
+  .side-header { display: flex; align-items: center; gap: 20px; margin-bottom: 10px; }
+  .side-icon { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; }
   .host-icon { background: rgba(251, 146, 60, 0.2); border: 1px solid var(--orange); color: var(--orange); }
   .core-icon { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--green); color: var(--green); }
 
-  .component-title { font-size: 28px; font-weight: 800; margin: 0; }
-
+  .side-title-text { font-size: 28px; font-weight: 800; margin: 0; }
+  
   .lang-tag {
-    display: inline-block; 
-    padding: 8px 18px; 
-    border-radius: 10px;
-    font-family: 'Roboto Mono', monospace; 
-    font-size: 14px; 
-    font-weight: 800; 
-    margin-top: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    display: inline-block; padding: 8px 20px; border-radius: 10px;
+    font-family: 'Roboto Mono', monospace; font-size: 16px; font-weight: 800; 
+    text-transform: uppercase; margin-top: 8px;
   }
-  
-  .rust-bubble { background-color: rgba(251, 146, 60, 0.25); border: 2px solid #fb923c; color: #fff; }
-  .c-bubble { background-color: rgba(16, 185, 129, 0.25); border: 2px solid #10b981; color: #fff; }
+  .rust-tag { background: rgba(251, 146, 60, 0.2); border: 2px solid var(--orange); color: #fff; }
+  .c-tag { background: rgba(16, 185, 129, 0.2); border: 2px solid var(--green); color: #fff; }
 
-  .component-list { display: flex; flex-direction: column; gap: 12px; }
-  .list-item { display: flex; align-items: center; gap: 12px; font-size: 17px; color: var(--muted); line-height: 1.3; }
-  .list-item i { font-size: 8px; opacity: 0.7; }
+  .bullet-list { display: flex; flex-direction: column; gap: 15px; }
+  .bullet-item { display: flex; align-items: flex-start; gap: 15px; font-size: 18px; color: var(--muted); line-height: 1.4; }
+  .bullet-item i { margin-top: 6px; font-size: 14px; }
+  .host-bullet i { color: var(--orange); }
+  .core-bullet i { color: var(--green); }
+  .bullet-strong { color: #fff; font-weight: 700; }
 
-  .boundary-box { 
-    background-color: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); 
-    border-radius: 16px; padding: 15px; text-align: center; width: 100%;
-    animation: fadeUp 0.8s ease-out both 0.2s;
-  }
-  .boundary-title { font-size: 16px; font-weight: 700; color: #c4b5fd; }
-
-  /* SIDEBAR IMAGE LINK */
-  .image-sidebar {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 20px;
-    padding: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+  .alt-note {
+    background-color: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 15px; padding: 20px;
+    display: flex; align-items: center; gap: 20px;
     animation: fadeUp 0.8s ease-out both 0.4s;
-    height: fit-content;
   }
-  .sidebar-label { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 15px; letter-spacing: 0.1em; }
-  
-  .thumbnail-link { display: block; text-decoration: none; transition: all 0.2s ease; }
-  .thumbnail-box { 
-    background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); 
-    border-radius: 12px; padding: 12px; overflow: hidden;
-  }
-  .small-preview-img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
-  .preview-label { font-size: 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
-  .thumbnail-link:hover .thumbnail-box { border-color: var(--blue); background: rgba(59, 130, 246, 0.1); transform: translateY(-2px); }
+  .alt-icon { font-size: 28px; color: var(--violet); }
+   b { color: var(--violet); }
 
   .bottom-nav {
     position: fixed; bottom: 0; left: 0; right: 0;
@@ -169,78 +130,61 @@
   .nav-next { background-color: #2563eb; }
   .nav-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
-
 <body>
 <div class="slide-container">
   <div class="header">
     <h1 class="slide-title">
-      <span class="title-highlight">Validation Framework (How to test the chip)</span><br>
-      Architecture Split
+      <span class="title-highlight">Validation Framework:</span><br>
+      Language Selection
     </h1>
-    <div class="side-title">
-      System Level <br>Interaction Design
-    </div>
   </div>
 
   <div class="content-wrapper">
-    <div class="architecture-container">
-      <div class="comp-row">
-        <div class="component-box host-box">
-          <div class="component-header">
-            <div class="component-icon host-icon"><i class="fas fa-terminal"></i></div>
-            <div>
-              <h2 class="component-title">Validation System</h2>
-              <span class="lang-tag rust-bubble">Written in Rust</span>
-            </div>
+    <div class="comparison-grid">
+      
+      <div class="side-card host-card">
+        <div class="side-header">
+          <div class="side-icon host-icon"><i class="fas fa-laptop-code"></i></div>
+          <div>
+            <h2 class="side-title-text">Validation System</h2>
+            <span class="lang-tag rust-tag">Why Rust?</span>
           </div>
-          <div class="component-list">
-            <div class="list-item"><i class="fas fa-circle"></i><span>Drives functional test vectors</span></div>
-            <div class="list-item"><i class="fas fa-circle"></i><span>High-level memory safety & validation</span></div>
-            <div class="list-item"><i class="fas fa-circle"></i><span>Simulates complex system interactions</span></div>
-          </div>
+        </div>
+        <div class="bullet-list">
+          <div class="bullet-item host-bullet"><i class="fas fa-shield-alt"></i><p><span class="bullet-strong">Memory Safety by Default</span> prevents common classes of critical security bugs</p></div>
+          <div class="bullet-item host-bullet"><i class="fas fa-project-diagram"></i><p><span class="bullet-strong">Strong Type System</span> and modern error handling improve reliability</p></div>
+          <div class="bullet-item host-bullet"><i class="fas fa-bolt"></i><p><span class="bullet-strong">Zero-cost Abstractions</span> matching traditional C/C++ performance</p></div>
+          <div class="bullet-item host-bullet"><i class="fas fa-users"></i><p><span class="bullet-strong">Safer Concurrency</span> for complex multi-threaded host interactions</p></div>
         </div>
       </div>
 
-      <div class="boundary-box">
-        <div class="boundary-title"><i class="fas fa-link mr-2"></i> Isolation Boundary: Validation API Bridge</div>
-      </div>
-
-      <div class="comp-row">
-        <div class="component-box core-box">
-          <div class="component-header">
-            <div class="component-icon core-icon"><i class="fas fa-microchip"></i></div>
-            <div>
-              <h2 class="component-title">Chip Firmware / ROM</h2>
-              <span class="lang-tag c-bubble">Written in C / ASM</span>
-            </div>
-          </div>
-          <div class="component-list">
-            <div class="list-item"><i class="fas fa-check"></i><span>Low-level hardware determinism</span></div>
-            <div class="list-item"><i class="fas fa-check"></i><span>Executes verified security logic</span></div>
-            <div class="list-item"><i class="fas fa-check"></i><span>Protects internal silicon state</span></div>
+      <div class="side-card core-card">
+        <div class="side-header">
+          <div class="side-icon core-icon"><i class="fas fa-microchip"></i></div>
+          <div>
+            <h2 class="side-title-text">Chip Firmware / ROM</h2>
+            <span class="lang-tag c-tag">Why C & ASM?</span>
           </div>
         </div>
+        <div class="bullet-list">
+          <div class="bullet-item core-bullet"><i class="fas fa-power-off"></i><p><span class="bullet-strong">Early Boot Sovereignty</span> — forms the base of the Trusted Computing Base</p></div>
+          <div class="bullet-item core-bullet"><i class="fas fa-bullseye"></i><p><span class="bullet-strong">Deterministic Behavior</span> and tight control of memory layout</p></div>
+          <div class="bullet-item core-bullet"><i class="fas fa-compress-arrows-alt"></i><p><span class="bullet-strong">Minimal Runtime Footprint</span> — no allocator/GC or timing jitter</p></div>
+          <div class="bullet-item core-bullet"><i class="fas fa-code"></i><p><span class="bullet-strong">ASM for Reset & Traps</span> — used for reset, traps, and constant-time primitives</p></div>
+        </div>
       </div>
+
     </div>
 
-    <div class="image-sidebar">
-      <div class="sidebar-label">On-Bench Verification</div>
-      <a href="Data/real_life_testing.jpg" target="_blank" class="thumbnail-link">
-        <div class="thumbnail-box">
-          <img src="Data/real_life_testing.jpg" class="small-preview-img" alt="Real Life Testing">
-          <div class="preview-label">
-            <span>Real Life Testing</span>
-            <i class="fas fa-external-link-alt ml-auto text-blue-400 text-xs"></i>
-          </div>
-        </div>
-      </a>
-      <p class="text-[11px] text-gray-500 mt-4 italic">
-        * Unit testing framework executing on physical silicon hardware targets.
-      </p>
+    <div class="alt-note">
+      <div class="alt-icon"><i class="fab fa-rust"></i></div>
+      <div class="alt-content">
+        <p><b>Evolution of Firmware:</b> While C is the current standard for ROM, OpenTitan's <b>TockOS</b> ecosystem uses <b>Rust</b> for stable firmware to extend memory safety directly into the embedded silicon layers.</p>
+      </div>
     </div>
   </div>
 
