@@ -1,224 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=1280, height=720" name="viewport"/>
-<title>OpenTitan: Rust & Bazel Architecture</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1280, height=720, initial-scale=1.0"/>
+    <title>OpenTitan: Rust & Bazel Architecture</title>
 
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet"/>
 
-<style>
-  :root{
-    --bg:#0f172a;
-    --blue:#3b82f6;
-    --violet:#8b5cf6;
-    --text:#ffffff;
-    --muted:#e2e8f0;
-    --nav-height: 80px;
-  }
+    <style>
+        :root {
+            --bg-1: #0f172a;
+            --bg-gradient: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+            --accent: #38bdf8; 
+            --text: #ffffff;
+            --card-bg: rgba(30, 41, 59, 0.7); 
+        }
 
-  html, body { height: 100%; overflow: hidden; }
-  body {
-    margin: 0; padding: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-  }
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            background: var(--bg-1);
+            background: var(--bg-gradient);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
 
-  .slide-container {
-    width: 100vw; height: 100vh;
-    display: flex; flex-direction: column;
-    position: relative; overflow: hidden;
-    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
-    isolation: isolate;
-  }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 60px; 
+            animation: fadeIn 0.8s ease-out;
+        }
 
-  .decorative-element {
-    position: absolute; border-radius: 50%;
-    opacity: 0.15; z-index: 0; pointer-events: none;
-    filter: blur(60px);
-    will-change: transform;
-  }
-  .circle-1 {
-    width: 500px; height: 500px; background: var(--blue);
-    top: -150px; right: -100px;
-    animation: floatOrb 20s infinite alternate ease-in-out;
-  }
-  .circle-2 {
-    width: 400px; height: 400px; background: var(--violet);
-    bottom: -100px; left: -100px;
-    animation: floatOrb 25s infinite alternate-reverse ease-in-out;
-  }
+        .header-section {
+            margin-bottom: 40px;
+        }
 
-  .header {
-    padding: 40px 80px 20px 80px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(15, 23, 42, 0.4);
-    backdrop-filter: blur(10px);
-    z-index: 2;
-  }
+        .main-title {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
 
-  .slide-title {
-    font-size: 40px; font-weight: 800;
-    line-height: 1.15; letter-spacing: -0.02em;
-    animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
- .title-highlight { color: #3b82f6; }
+        .title-highlight { 
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
 
-  .content-wrapper {
-    flex: 1;
-    padding: 30px 80px 100px 80px !important;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: center;
-    z-index: 2;
-  }
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 30px;
+            width: 100%;
+        }
 
-  .section-title {
-    font-size: 20px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--blue);
-    margin-bottom: 20px;
-  }
+        .info-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 8px solid var(--accent);
+            padding: 35px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out both;
+        }
 
-  .info-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 30px;
-    height: 100%;
-    transition: all 0.3s ease;
-  }
+        .info-card:nth-child(1) { animation-delay: 0.2s; }
+        .info-card:nth-child(2) { animation-delay: 0.4s; }
 
-  .info-card:hover {
-    background: rgba(59, 130, 246, 0.08);
-    border-color: rgba(59, 130, 246, 0.3);
-  }
+        .section-title {
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--accent);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-  .card-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
+        .card-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-  .card-icon {
-    width: 40px; height: 40px;
-    background: rgba(59, 130, 246, 0.2);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    color: var(--blue);
-  }
+        .card-icon {
+            color: var(--accent);
+            font-size: 20px;
+            margin-top: 4px;
+        }
 
-  .card-text { font-size: 16px; color: var(--muted); line-height: 1.5; }
-  .card-strong { color: var(--text); font-weight: 700; display: block; }
+        .card-text { 
+            font-size: 19px; 
+            color: #94a3b8; 
+            line-height: 1.5; 
+        }
 
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    height: var(--nav-height);
-    padding: 0 60px;
-    display: flex; justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.9) 100%);
-    z-index: 100;
-    pointer-events: none;
-  }
+        .card-strong { 
+            color: #fff; 
+            font-weight: 700; 
+            display: block;
+            font-size: 21px;
+            margin-bottom: 4px;
+        }
 
-  .nav-btn {
-    pointer-events: auto;
-    display: inline-flex; align-items: center; gap: 12px;
-    padding: 10px 24px; border-radius: 999px;
-    text-decoration: none; font-weight: 700;
-    font-size: 16px;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    color: #ffffff;
-  }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
-  .nav-prev { background-color: #4b5563; }
-  .nav-next { background-color: #2563eb; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
-  .nav-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  @keyframes floatOrb { from { transform: translate(0, 0); } to { transform: translate(-40px, 40px); } }
-  @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .bottom-nav {
+            position: fixed; 
+            bottom: 30px; 
+            left: 50px; 
+            right: 50px;
+            display: flex; 
+            justify-content: space-between;
+        }
 
-</style>
+        .nav-btn {
+            display: inline-flex; 
+            align-items: center; 
+            gap: 12px;
+            padding: 16px 36px; 
+            border-radius: 999px;
+            color: #0f172a; 
+            text-decoration: none;
+            font-weight: 800; 
+            font-size: 22px; 
+            background-color: var(--accent);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        
+        .nav-prev { 
+            background-color: #cbd5e1; 
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+        
+    </style>
 </head>
 <body>
+
 <div class="slide-container">
-  <div class="decorative-element circle-1"></div>
-  <div class="decorative-element circle-2"></div>
+    <header class="header-section">
+        <h1 class="main-title">
+            Verifiable Implementation:<br>
+            <span class="title-highlight">The Bazel & Rust Ecosystem</span>
+        </h1>
+    </header>
 
-  <div class="header">
-    <h1 class="slide-title">
-      Verifiable Implementation:<br>
-      <span class="title-highlight">The Bazel & Rust Ecosystem</span>
-    </h1>
-  </div>
+    <div class="content-grid">
+        <div class="info-card">
+            <h2 class="section-title"><i class="fas fa-layer-group"></i> Why Bazel?</h2>
+            
+            <div class="card-item">
+                <i class="fas fa-cubes card-icon"></i>
+                <p class="card-text">
+                    <span class="card-strong">Unified Polyglot Build</span>
+                    Manages the entire monorepo, ensuring <strong>C, SystemVerilog, and Rust</strong> interoperate seamlessly.
+                </p>
+            </div>
 
-  <div class="content-wrapper">
-    <div class="info-card" style="animation: fadeUp 0.8s ease-out both 0.2s;">
-      <h2 class="section-title">Why Bazel?</h2>
-      <div class="card-item">
-        <div class="card-icon"><i class="fas fa-cubes"></i></div>
-        <p class="card-text">
-          <span class="card-strong">Unified Polyglot Build</span>
-          Bazel manages the entire monorepo, including <strong>C, SystemVerilog, and Rust</strong>, ensuring they link and interoperate correctly.
-        </p>
-      </div>
-      <div class="card-item">
-        <div class="card-icon"><i class="fas fa-vial"></i></div>
-        <p class="card-text">
-          <span class="card-strong">Reproducible Testing</span>
-          Actions run in sandboxes to ensure that build outputs are identical regardless of the environment (Linux, Mac, or CI).
-        </p>
-      </div>
-      <div class="card-item">
-        <div class="card-icon"><i class="fas fa-bolt"></i></div>
-        <p class="card-text">
-          <span class="card-strong">Aggressive Caching</span>
-          Massive build speed improvements by re-running only what has changed since the last git pull.
-        </p>
-      </div>
+            <div class="card-item">
+                <i class="fas fa-vial card-icon"></i>
+                <p class="card-text">
+                    <span class="card-strong">Reproducible Testing</span>
+                    Sandboxed actions ensure build outputs are identical across Linux, Mac, or CI environments.
+                </p>
+            </div>
+
+            <div class="card-item">
+                <i class="fas fa-bolt card-icon"></i>
+                <p class="card-text">
+                    <span class="card-strong">Aggressive Caching</span>
+                    Accelerates development by only re-building components that have actually changed.
+                </p>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h2 class="section-title"><i class="fab fa-rust"></i> Rust Usage</h2>
+            
+            <div class="card-item">
+                <i class="fas fa-tools card-icon"></i>
+                <p class="card-text">
+                    <span class="card-strong">opentitantool & lib</span>
+                    The primary hardware interface (bootstrap/IO) is written in Rust for memory safety and reliability.
+                </p>
+            </div>
+
+            <div class="card-item">
+                <i class="fas fa-microchip card-icon"></i>
+                <p class="card-text">
+                    <span class="card-strong">Silicon Validation</span>
+                    Host-side tests use Rust to drive functional vectors while protecting internal silicon state.
+                </p>
+            </div>
+
+            <div class="card-item">
+                <i class="fas fa-code-branch card-icon"></i>
+                <p class="card-text">
+                    <span class="card-strong">rules_rust Integration</span>
+                    Utilizes Bazel’s <strong>rules_rust</strong> to map Cargo dependencies into an optimized build graph.
+                </p>
+            </div>
+        </div>
     </div>
 
-    <div class="info-card" style="animation: fadeUp 0.8s ease-out both 0.4s;">
-      <h2 class="section-title">Rust Usage Examples</h2>
-      <div class="card-item">
-        <div class="card-icon"><i class="fab fa-rust"></i></div>
-        <p class="card-text">
-          <span class="card-strong">opentitantool & opentitanlib</span>
-          The primary interface for interacting with the silicon (bootstrap, reset, I/O) is written in Rust for safety and reliability.
-        </p>
-      </div>
-      <div class="card-item">
-        <div class="card-icon"><i class="fas fa-microchip"></i></div>
-        <p class="card-text">
-          <span class="card-strong">Silicon Validation (SiVal)</span>
-          Host-side test cases are written in Rust to drive functional test vectors while protecting internal silicon state.
-        </p>
-      </div>
-      <div class="card-item">
-        <div class="card-icon"><i class="fas fa-code-branch"></i></div>
-        <p class="card-text">
-          <span class="card-strong">rules_rust Integration</span>
-          The project utilizes <strong>rules_rust</strong> to import dependencies from Cargo.toml into Bazel's optimized build graph.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <div class="bottom-nav">
-    <a class="nav-btn nav-prev" href="ot_4.html"><i class="fas fa-arrow-left"></i> Previous Slide</a>
-    <a class="nav-btn nav-next" href="end.html">Next Slide <i class="fas fa-arrow-right"></i></a>
-  </div>
+    <nav class="bottom-nav">
+        <a class="nav-btn nav-prev" href="ot_4.html">
+            <i class="fas fa-arrow-left"></i>
+            <span>Previous</span>
+        </a>
+        <a class="nav-btn" href="end.html">
+            <span>Next Slide</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </nav>
 </div>
+
 </body>
 </html>

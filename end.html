@@ -1,189 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=1280, height=720" name="viewport"/>
-<title>Thank You - Animated</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1280, height=720, initial-scale=1.0"/>
+    <title>Thank You - OpenTitan Style</title>
 
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet"/>
 
-<style>
-    :root {
-        --bg:#0f172a;
-        --blue:#3b82f6;
-        --green:#10b981;
-        --purple:#8b5cf6;
-        --text:#ffffff;
-        /* Master Standard Nav Height */
-        --nav-height: 80px;
-    }
+    <style>
+        :root {
+            --bg-1: #0f172a;
+            --bg-gradient: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+            --accent: #38bdf8; 
+            --text: #ffffff;
+            --card-bg: rgba(30, 41, 59, 0.7); 
+        }
 
-    html, body { height: 100%; overflow: hidden; }
-    body{
-        margin:0; padding:0;
-        font-family:'Inter',sans-serif;
-        background-color:var(--bg);
-        color:var(--text);
-    }
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            background: var(--bg-1);
+            background: var(--bg-gradient);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
 
-    /* --- Keyframe Animations --- */
-    @keyframes popIn {
-        0% { opacity: 0; transform: scale(0.5); }
-        70% { transform: scale(1.1); }
-        100% { opacity: 1; transform: scale(1); }
-    }
-    @keyframes slideUpFade {
-        from { opacity: 0; transform: translateY(40px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes expandWidth {
-        from { width: 0; opacity: 0; }
-        to { width: 60px; opacity: 1; }
-    }
-    @keyframes float {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(-20px, 20px) scale(1.05); }
-    }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 60px; 
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+        }
 
-    /* --- Elements --- */
-    .slide-container{
-        width:100vw; height:100vh;
-        position:relative; display:flex;
-        flex-direction:column; overflow:hidden;
-        isolation:isolate;
-    }
+        /* Standardized Large Title from first slide */
+        .main-title {
+            font-size: 82px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            text-align: center;
+        }
 
-    .content-wrapper{
-        flex:1; display:flex;
-        flex-direction:column; align-items:center;
-        justify-content:center; gap:28px;
-        /* Reserved space for fixed bottom nav */
-        padding: 60px 60px var(--nav-height) 60px; 
-        z-index:2;
-    }
+        .title-highlight { 
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
 
-    .icon-container{
-        width:110px; height:110px;
-        border-radius:50%;
-        background-color:rgba(59,130,246,0.15);
-        border:3px solid rgba(59,130,246,0.4);
-        display:flex; align-items:center; justify-content:center;
-        animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-    }
-    .icon-container i{ font-size:50px; color:#60a5fa; }
+        /* Subtitle Styling */
+        .subtitle-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out both;
+            animation-delay: 0.4s;
+        }
 
-    .thank-you-text{
-        font-size:82px; font-weight:900;
-        line-height:1.1; text-align:center;
-        animation: slideUpFade 0.8s ease-out both;
-        animation-delay: 0.3s;
-    }
-    .thank-you-highlight{ color:#60a5fa; }
+        .divider-line {
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
 
-    .subtitle-container{
-        display:flex; align-items:center;
-        gap:18px; margin-top:8px;
-    }
-    .divider-line{
-        height:3px; background-color:rgba(59,130,246,0.5);
-        border-radius:2px;
-        animation: expandWidth 0.8s ease-out both;
-        animation-delay: 1s;
-    }
-    .questions-text{
-        font-size:34px; font-weight:700;
-        color:#cbd5e1; text-align:center;
-        animation: slideUpFade 0.6s ease-out both;
-        animation-delay: 0.8s;
-    }
+        .questions-text {
+            font-size: 34px;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
 
-    .subtext{
-        font-size:16px; color:#94a3b8;
-        font-weight:500; text-align:center;
-        animation: slideUpFade 0.6s ease-out both;
-        animation-delay: 1.2s;
-    }
+        .subtext {
+            font-size: 20px;
+            color: #94a3b8;
+            animation: fadeInUp 0.8s ease-out both;
+            animation-delay: 0.6s;
+        }
 
-    /* Decorative Background */
-    .decorative-element{
-        position:absolute; border-radius:50%;
-        opacity:0.04; z-index:0; pointer-events:none;
-        animation: float 10s infinite ease-in-out;
-    }
-    .circle-1{ width:420px; height:420px; background-color:var(--blue); top:-150px; right:-120px; }
-    .circle-2{ width:320px; height:320px; background-color:var(--green); bottom:-140px; left:-100px; animation-delay: -2s; }
-    .circle-3{ 
-        width:220px; height:220px; background-color:var(--purple); 
-        top:50%; left:50%; margin-left: -110px; margin-top: -110px;
-        animation-delay: -5s; 
-    }
+        /* Decorative Background Elements (Kept from original but softened) */
+        .decorative-element {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.05;
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+        .circle-1 { width: 500px; height: 500px; background-color: var(--accent); top: -100px; right: -100px; }
+        .circle-2 { width: 400px; height: 400px; background-color: #6366f1; bottom: -100px; left: -100px; }
 
-    .accent-dots{
-        position:fixed; bottom: 30px;
-        left:50%; transform:translateX(-50%);
-        display:flex; gap:8px; z-index:3;
-        animation: slideUpFade 0.5s ease-out both;
-        animation-delay: 1.4s;
-    }
-    .dot{ width:9px; height:9px; background-color:rgba(59,130,246,0.4); border-radius:50%; }
-    .dot.active{ width:28px; border-radius:4px; background-color:rgba(59,130,246,0.8); }
+        /* Icon styling */
+        .icon-container {
+            font-size: 80px;
+            color: var(--accent);
+            margin-bottom: 30px;
+            animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
 
-    /* --- Standardized Navigation Fix --- */
-    .bottom-nav {
-        position: fixed; bottom: 0; left: 0; right: 0;
-        height: var(--nav-height); padding: 0 60px;
-        display: flex; justify-content: flex-start; align-items: center;
-        background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.95) 100%);
-        z-index: 100; pointer-events: none;
-    }
+        /* Standard Navigation matching Slide 1 */
+        .bottom-nav {
+            position: fixed; 
+            bottom: 30px; 
+            left: 50px; 
+            right: 50px;
+            display: flex; 
+            justify-content: space-between;
+        }
 
-    .nav-btn {
-        pointer-events: auto; display: inline-flex; align-items: center; gap: 10px;
-        padding: 10px 22px; border-radius: 9999px; text-decoration: none;
-        font-weight: 700; font-size: 16px; color: #fff;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.35); transition: all 0.2s ease;
-        background-color:#4b5563;
-    }
-    .nav-btn:hover { transform: translateY(-2px); background-color:#374151; }
-</style>
+        .nav-btn {
+            display: inline-flex; 
+            align-items: center; 
+            gap: 12px;
+            padding: 16px 36px; 
+            border-radius: 999px; 
+            color: #0f172a; 
+            text-decoration: none;
+            font-weight: 800; 
+            font-size: 22px; 
+            background-color: var(--accent);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        
+        .nav-prev { 
+            background-color: #cbd5e1; 
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+    </style>
 </head>
-
 <body>
+
 <div class="slide-container">
     <div class="decorative-element circle-1"></div>
     <div class="decorative-element circle-2"></div>
-    <div class="decorative-element circle-3"></div>
 
-    <div class="content-wrapper">
-        <div class="icon-container">
-            <i class="fas fa-check-circle"></i>
-        </div>
-
-        <h1 class="thank-you-text">
-            <span class="thank-you-highlight">Thank</span><br>
-            You
-        </h1>
-
-        <div class="subtitle-container">
-            <div class="divider-line"></div>
-            <h2 class="questions-text">Questions?</h2>
-            <div class="divider-line"></div>
-        </div>
-
-        <p class="subtext">Contact and references available upon request</p>
+    <div class="icon-container">
+        <i class="fas fa-check-circle"></i>
     </div>
 
-    <div class="accent-dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot active"></div>
+    <h1 class="main-title">
+        <span class="title-highlight">Thank</span> You
+    </h1>
+
+    <div class="subtitle-container">
+        <div class="divider-line"></div>
+        <h2 class="questions-text">Questions?</h2>
+        <div class="divider-line"></div>
     </div>
 
-  <div class="bottom-nav">
-    <a class="nav-btn nav-prev" href="ot_6.html"><i class="fas fa-arrow-left"></i><span>Previous Slide</span></a>
-  </div>
+    <p class="subtext">Contact and references available upon request</p>
+
+    <nav class="bottom-nav">
+        <a class="nav-btn nav-prev" href="ot_5.html">
+            <i class="fas fa-arrow-left"></i>
+            <span>Previous Slide</span>
+        </a>
+        <div></div> 
+    </nav>
 </div>
+
 </body>
 </html>
