@@ -1,171 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=1280, height=720" name="viewport"/>
-<title>What Is OpenTitan?</title>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
-<style>
-    :root{
-        --bg:#0f172a;
-        --accent:#3b82f6;
-        --accent-2:#8b5cf6;
-        --muted:#94a3b8;
-        --text:#ffffff;
-        --nav-height: 80px;
-    }
-    html, body { height: 100%; overflow: hidden; }
-    body {
-        margin: 0; padding: 0;
-        font-family: 'Inter', sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        background-image:
-            radial-gradient(900px 600px at 90% -10%, #1e293b 0%, var(--bg) 60%),
-            radial-gradient(700px 500px at -10% 110%, #0b1222 0%, var(--bg) 60%);
-        animation: bgPulse 14s ease-in-out infinite alternate;
-    }
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1280, height=720, initial-scale=1.0"/>
+    <title>What Is OpenTitan?</title>
 
-    .slide-container {
-        width: 100vw; height: 100vh;
-        display: flex; flex-direction: column;
-        position: relative; overflow: hidden;
-        isolation: isolate;
-    }
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet"/>
 
-    .header {
-        padding: 50px 80px 30px 80px;
-        border-bottom: 2px solid rgba(59, 130, 246, 0.3);
-        position: relative; z-index: 2;
-    }
-    .slide-title {
-        font-size: 48px; font-weight: 800;
-        line-height: 1.15; letter-spacing: -0.02em;
-        opacity: 0; transform: translateY(10px);
-        animation: fadeInDown 750ms ease-out forwards 80ms;
-    }
-    .title-highlight { color: var(--accent); }
+    <style>
+        :root {
+            --bg-1: #0f172a;
+            --bg-gradient: radial-gradient(circle at 20% 30%, #1e293b 0%, #0f172a 100%);
+            --accent: #38bdf8; 
+            --text: #ffffff;
+            --card-bg: rgba(30, 41, 59, 0.5); 
+            --muted: #94a3b8;
+        }
 
-    .content-wrapper {
-        flex: 1;
-        padding: 50px 80px calc(var(--nav-height) + 20px) 80px !important;
-        display: grid;
-        grid-template-columns: 1fr 280px; 
-        gap: 60px;
-        align-items: center;
-        position: relative; z-index: 2;
-    }
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            background: var(--bg-1);
+            background: var(--bg-gradient);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
 
-    /* Summary Box Styling to match the previous page */
-    .summary-section {
-        opacity: 0;
-        animation: fadeUp 800ms ease-out forwards 200ms;
-    }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 80px; 
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+        }
 
-    .summary-text {
-        font-size: 24px;
-        line-height: 1.6;
-        color: #e2e8f0;
-    }
+        .header {
+            margin-bottom: 40px;
+        }
 
-    .accent-text {
-        color: var(--accent);
-        font-weight: 700;
-    }
+        .main-title {
+            font-size: 72px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+        }
 
-    .logo-sidebar {
-        display: flex; flex-direction: column;
-        gap: 20px; align-items: center;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        backdrop-filter: blur(8px);
-        opacity: 0; animation: fadeIn 1s ease-out forwards 600ms;
-    }
-    .logo-sidebar img {
-        max-width: 180px; height: auto;
-        filter: brightness(0.9) contrast(1.1);
-        transition: transform 0.3s ease;
-        border-radius: 4px;
-    }
-    .logo-sidebar img:hover { transform: scale(1.05); }
-    .sidebar-label {
-        font-size: 12px; font-weight: 700; color: var(--muted);
-        text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
-    }
+        .title-highlight { 
+            color: var(--accent);
+            text-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+        }
 
-    .decorative-element {
-        position: absolute; border-radius: 50%; opacity: 0.06;
-        z-index: 0; pointer-events: none;
-    }
-    .circle-1 { width: 350px; height: 350px; background-color: var(--accent); top: -100px; right: -80px; animation: floatRight 18s ease-in-out infinite; }
-    .circle-2 { width: 250px; height: 250px; background-color: var(--accent-2); bottom: -80px; left: -60px; animation: floatLeft 20s ease-in-out infinite; }
-    
-    .bottom-nav {
-        position: fixed; bottom: 0; left: 0; right: 0;
-        height: var(--nav-height); padding: 0 60px;
-        display: flex; justify-content: space-between; align-items: center;
-        background: linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.95) 100%);
-        z-index: 100;
-    }
-    .nav-btn {
-        display: inline-flex; align-items: center; gap: 10px;
-        padding: 10px 22px; border-radius: 999px; text-decoration: none;
-        font-weight: 700; font-size: 16px; color: white;
-        box-shadow: 0 10px 28px rgba(0,0,0,0.35); transition: all 180ms ease;
-    }
-    .nav-prev { background: #4b5563; }
-    .nav-next { background: #2563eb; }
-    .nav-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 60px;
+            align-items: center;
+        }
 
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes floatRight { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-14px, 10px); } }
-    @keyframes floatLeft { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(14px, -10px); } }
-    @keyframes bgPulse { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(6deg); } }
-</style>
+        .summary-section {
+            border-left: 5px solid var(--accent);
+            padding-left: 40px;
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .summary-text {
+            font-size: 26px;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        .accent-text {
+            color: var(--accent);
+            font-weight: 700;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        /* Sidebar Styling */
+        .logo-sidebar {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 30px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            animation: fadeInUp 0.8s ease-out both;
+            animation-delay: 0.2s;
+        }
+
+        .logo-sidebar img {
+            width: 180px;
+            height: 60px;
+            object-fit: contain;
+            background: white; /* Ensures visibility of transparent logos */
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .logo-sidebar img:hover {
+            transform: scale(1.08);
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .sidebar-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 10px;
+        }
+
+        /* Navigation Buttons */
+        
+       .bottom-nav {
+            position: fixed; 
+            bottom: 30px; 
+            left: 50px; 
+            right: 50px;
+            display: flex; 
+            justify-content: space-between;
+        }
+
+        .nav-btn {
+            display: inline-flex; 
+            align-items: center; 
+            gap: 12px;
+            padding: 16px 36px; 
+            border-radius: 999px; /* Pill shape */
+            color: #0f172a; 
+            text-decoration: none;
+            font-weight: 800; 
+            font-size: 22px; 
+            background-color: var(--accent);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        
+        /* Matching the "Previous" button color from the second slide */
+        .nav-prev { 
+            background-color: #cbd5e1; 
+        }
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        .nav-btn:not(.nav-prev):hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+            filter: brightness(1.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+    </style>
 </head>
 <body>
-<div class="slide-container">
-    <div class="decorative-element circle-1"></div>
-    <div class="decorative-element circle-2"></div>
 
-    <div class="header">
-        <h1 class="slide-title">
-            The <span class="title-highlight">OpenTitan</span> Collaboration
+<div class="slide-container">
+    <header class="header">
+        <h1 class="main-title">
+            The <span class="title-highlight">OpenTitan</span><br>
+            Collaboration
         </h1>
-    </div>
+    </header>
 
     <div class="content-wrapper">
         <div class="summary-section">
-            <p class="summary-text">
-                While Google provided the high-level security architecture and vision,<br>
-                <span class="accent-text">Nuvoton was the critical partner that turned "code into silicon."</span><br><br>
-                Open-source designs are just blueprints (RTL) until a semiconductor expert like <span class="accent-text">Nuvoton applies the engineering required to manufacture them at scale</span>.<br>
-                The OpenTitan project is a strategic union designed to bridge the gap between 
-                <span class="accent-text">security and commercial hardware</span>.<br><br>
-                Nuvoton brings essential <span class="accent-text">manufacturing and Security IC expertise</span> to the table, turning transparent RTL designs into mass-produced, commercial-grade chips. This ensures that the hardware can be <span class="accent-text">independently audited and verified</span>, meeting the growing global demand for a trustworthy, open-source Root of Trust in everything from data centers to critical infrastructure.
-            </p>
+            <div class="summary-text">
+                <p class="mb-6">
+                    While Google provided the high-level security architecture, 
+                    <span class="accent-text">Nuvoton was the critical partner that turned "code into silicon."</span>
+                </p>
+                <p class="mb-6">
+                    Open-source designs are just blueprints (RTL) until a semiconductor expert like 
+                    <span class="accent-text">Nuvoton applies the engineering required to manufacture at scale.</span>
+                </p>
+                <p>
+                    This partnership ensures hardware can be <span class="accent-text">independently audited</span>, 
+                    meeting the global demand for a trustworthy, open-source Root of Trust.
+                </p>
+            </div>
         </div>
 
         <div class="logo-sidebar">
-            <span class="sidebar-label">Partners</span>
-            <img src="Data\Nuvoton_Technology_logo.svg.jpg" alt="Nuvoton">
-            <img src="Data\pngimg.com - google_PNG19644.jpg" alt="Google">
-            <img src="Data\lowrisc.jpg" alt="RISC-V">
-            <img src="Data\giesecke.jpg" alt="Giesecke">
-            <img src="Data\ethz_zurich.jpg" alt="ETH Zurich">
+            <span class="sidebar-label">Strategic Partners</span>
+            <img src="Data/Nuvoton_Technology_logo.svg.jpg" alt="Nuvoton">
+            <img src="Data/pngimg.com - google_PNG19644.jpg" alt="Google">
+            <img src="Data/lowrisc.jpg" alt="lowRISC">
+            <img src="Data/giesecke.jpg" alt="G+D">
+            <img src="Data/ethz_zurich.jpg" alt="ETH Zurich">
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <a class="nav-btn nav-prev" href="index_ot.html"><i class="fas fa-arrow-left"></i><span>Previous Slide</span></a>
-        <a class="nav-btn nav-next" href="ot_2.html"><span>Next Slide</span><i class="fas fa-arrow-right"></i></a>
-    </div>
+    <nav class="bottom-nav">
+        <a class="nav-btn nav-prev" href="index_ot.html">
+            <i class="fas fa-arrow-left"></i>
+            <span>Previous</span>
+        </a>
+        <a class="nav-btn" href="ot_2.html">
+            <span>Next Slide</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </nav>
 </div>
+
 </body>
 </html>
