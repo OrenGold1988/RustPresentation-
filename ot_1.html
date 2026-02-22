@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=1280, height=720, initial-scale=1.0"/>
-    <title>What Is OpenTitan?</title>
+    <title>The OpenTitan Collaboration</title>
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" crossorigin="anonymous"/>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous"/>
@@ -43,13 +43,13 @@
         }
 
         .header {
-            margin-bottom: 40px;
+            margin-bottom: 15px; 
         }
 
         .main-title {
             font-size: 72px;
             font-weight: 800;
-            margin-bottom: 10px;
+            margin-bottom: 0px; 
             line-height: 1.1;
             letter-spacing: -0.03em;
         }
@@ -61,9 +61,11 @@
 
         .content-wrapper {
             display: grid;
-            grid-template-columns: 1fr 320px;
+            grid-template-columns: 1fr 350px; 
             gap: 60px;
             align-items: center;
+            /* Added margin to ensure no overlap with navigation */
+            margin-bottom: 100px;
         }
 
         .summary-section {
@@ -86,26 +88,25 @@
             border-radius: 4px;
         }
 
-        /* Sidebar Styling */
         .logo-sidebar {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 30px;
+            padding: 30px 20px;
             border-radius: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 20px; /* Tightened gap slightly to save space */
             align-items: center;
             animation: fadeInUp 0.8s ease-out both;
             animation-delay: 0.2s;
         }
 
         .logo-sidebar img {
-            width: 180px;
-            height: 60px;
+            width: 200px; /* Adjusted size slightly for better fit */
+            height: 80px;
             object-fit: contain;
-            background: white; /* Ensures visibility of transparent logos */
+            background: white; 
             padding: 8px;
             border-radius: 8px;
             transition: all 0.3s ease;
@@ -113,29 +114,31 @@
         }
 
         .logo-sidebar img:hover {
-            transform: scale(1.08);
+            transform: scale(1.05);
             opacity: 1;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
         }
 
         .sidebar-label {
-            font-size: 12px;
+            font-size: 40px; 
             font-weight: 800;
             color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.05em;
             margin-bottom: 10px;
+            text-align: center;
+            line-height: 1;
         }
 
-        /* Navigation Buttons */
-        
-       .bottom-nav {
+        .bottom-nav {
             position: fixed; 
             bottom: 30px; 
             left: 50px; 
             right: 50px;
             display: flex; 
             justify-content: space-between;
+            z-index: 50; /* Ensure buttons stay on top */
+            background: transparent;
         }
 
         .nav-btn {
@@ -143,29 +146,24 @@
             align-items: center; 
             gap: 12px;
             padding: 16px 36px; 
-            border-radius: 999px; /* Pill shape */
+            border-radius: 999px; 
             color: #0f172a; 
             text-decoration: none;
             font-weight: 800; 
             font-size: 22px; 
             background-color: var(--accent);
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            transition: transform 0.2s ease, opacity 0.2s ease;
+            transition: all 0.2s ease;
         }
         
-        /* Matching the "Previous" button color from the second slide */
         .nav-prev { 
             background-color: #cbd5e1; 
         }
-        .nav-btn:hover {
-            transform: translateY(-2px);
-            opacity: 0.95;
-        }
 
-        .nav-btn:not(.nav-prev):hover {
+        .nav-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
-            filter: brightness(1.1);
+            opacity: 0.95;
+            box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3);
         }
 
         @keyframes fadeIn {
@@ -209,7 +207,7 @@
         </div>
 
         <div class="logo-sidebar">
-            <span class="sidebar-label">Strategic Partners</span>
+            <span class="sidebar-label">Strategic<br>Partners</span>
             <img src="Data/Nuvoton_Technology_logo.svg.jpg" alt="Nuvoton">
             <img src="Data/pngimg.com - google_PNG19644.jpg" alt="Google">
             <img src="Data/lowrisc.jpg" alt="lowRISC">
