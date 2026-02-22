@@ -37,16 +37,16 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            padding: 60px 60px 0 60px; 
+            padding: 40px 60px 100px 60px; 
             animation: fadeIn 0.8s ease-out;
         }
 
         .header-section {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 30px;
+            align-items: flex-start;
+            gap: 40px; /* Space between title and interaction label */
+            margin-bottom: 25px;
+            flex-shrink: 0;
         }
 
         .main-title {
@@ -62,35 +62,42 @@
         }
 
         .side-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--orange);
             text-transform: uppercase;
             border-left: 4px solid var(--orange);
-            padding-left: 20px;
+            padding-left: 15px;
+            margin-top: 10px; /* Aligns with the first line of the title */
             line-height: 1.2;
+            white-space: nowrap;
         }
 
         .content-grid {
             display: grid;
-            grid-template-columns: 1fr 350px;
+            grid-template-columns: 1fr 400px;
             gap: 40px;
-            align-items: start;
+            flex: 1; 
+            min-height: 0; 
         }
 
         .architecture-flow {
             display: flex;
             flex-direction: column;
-            gap: 15px; /* Reduced gap */
-            max-width: 800px;
+            gap: 10px;
+            height: 100%;
         }
 
         .component-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px 25px; /* Reduced padding */
+            padding: 20px;
             border-radius: 12px;
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             animation: fadeInUp 0.6s ease-out both;
         }
 
@@ -105,9 +112,9 @@
         }
 
         .card-icon {
-            font-size: 22px; /* Smaller icon */
-            width: 40px;
-            height: 40px;
+            font-size: 22px;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -116,18 +123,17 @@
         }
 
         .card-title-text {
-            font-size: 24px; /* Smaller title */
+            font-size: 28px;
             font-weight: 800;
             margin: 0;
         }
 
         .tech-tag {
-            font-size: 12px; /* Smaller tag */
+            font-size: 14px;
             font-weight: 800;
             text-transform: uppercase;
-            padding: 2px 10px;
+            padding: 2px 12px;
             border-radius: 4px;
-            margin-top: 3px;
             display: inline-block;
         }
 
@@ -135,74 +141,84 @@
         .tag-c { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); }
 
         .list-items {
-            margin-top: 10px;
-            font-size: 18px; /* Smaller text */
-            color: #94a3b8;
+            margin-top: 15px;
+            font-size: 22px;
+            color: var(--text);
             list-style: none;
             padding: 0;
         }
 
         .list-items li {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
-
-        .list-items li i { font-size: 10px; opacity: 0.6; }
 
         .bridge-box {
             background: rgba(139, 92, 246, 0.1);
             border: 1px dashed #8b5cf6;
             border-radius: 10px;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
             font-weight: 700;
             color: #c4b5fd;
             font-size: 16px;
             width: fit-content;
-            margin-left: 40px;
+            align-self: center;
         }
 
-        /* Sidebar Styling */
+        .sidebar-area {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
         .sidebar-card {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 12px;
             padding: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar-label {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 800;
-            color: #64748b;
+            color: var(--accent);
             text-transform: uppercase;
             margin-bottom: 15px;
             letter-spacing: 0.1em;
+            flex-shrink: 0;
         }
 
         .preview-box {
             background: #000;
             border-radius: 8px;
             overflow: hidden;
-            border: 2px solid transparent;
+            border: 2px solid rgba(255,255,255,0.1);
             transition: border-color 0.3s ease;
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
         }
 
         .preview-box:hover { border-color: var(--accent); }
 
         .preview-img {
             width: 100%;
-            height: 180px;
+            flex: 1; 
             object-fit: cover;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .bottom-nav {
             position: fixed; 
             bottom: 30px; 
-            left: 50px; 
-            right: 50px;
+            left: 60px; 
+            right: 60px;
             display: flex; 
             justify-content: space-between;
         }
@@ -240,10 +256,9 @@
             <span class="title-highlight">Validation Framework</span><br>
             Architecture Split
         </h1>
-        <div class="side-title">
-            System Level<br>Interaction
-        </div>
     </header>
+
+    
 
     <div class="content-grid">
         <div class="architecture-flow">
@@ -256,9 +271,9 @@
                     </div>
                 </div>
                 <ul class="list-items">
-                    <li><i class="fas fa-circle"></i> Drives functional test vectors</li>
-                    <li><i class="fas fa-circle"></i> High-level memory safety & validation</li>
-                    <li><i class="fas fa-circle"></i> Simulates complex system interactions</li>
+                    <li><i class="fas fa-chevron-right text-xs opacity-50"></i> Drives functional test vectors</li>
+                    <li><i class="fas fa-chevron-right text-xs opacity-50"></i> High-level memory safety & validation</li>
+                    <li><i class="fas fa-chevron-right text-xs opacity-50"></i> Simulates complex system interactions</li>
                 </ul>
             </div>
 
@@ -275,9 +290,9 @@
                     </div>
                 </div>
                 <ul class="list-items">
-                    <li><i class="fas fa-check"></i> Low-level hardware determinism</li>
-                    <li><i class="fas fa-check"></i> Executes verified security logic</li>
-                    <li><i class="fas fa-check"></i> Protects internal silicon state</li>
+                    <li><i class="fas fa-check text-xs opacity-50"></i> Low-level hardware determinism</li>
+                    <li><i class="fas fa-check text-xs opacity-50"></i> Executes verified security logic</li>
+                    <li><i class="fas fa-check text-xs opacity-50"></i> Protects internal silicon state</li>
                 </ul>
             </div>
         </div>
@@ -287,14 +302,11 @@
                 <div class="sidebar-label">On-Bench Verification</div>
                 <a href="Data/real_life_testing.jpg" target="_blank" class="preview-box block">
                     <img src="Data/real_life_testing.jpg" class="preview-img" alt="Bench Testing">
-                    <div class="p-3 text-sm font-bold flex justify-between items-center">
-                        <span>Real Life Testing</span>
+                    <div class="p-4 bg-black text-sm font-bold flex justify-between items-center">
+                        <span>Physical Silicon Targets</span>
                         <i class="fas fa-external-link-alt text-blue-400"></i>
                     </div>
                 </a>
-                <p class="text-xs text-gray-500 mt-4 italic">
-                    * Unit testing framework executing on physical silicon hardware targets.
-                </p>
             </div>
         </div>
     </div>
