@@ -1,155 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=1280, height=720" name="viewport"/>
-<title>Nuvoton: Hardware Security Architecture</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1280, height=720, initial-scale=1.0"/>
+    <title>Nuvoton: Hardware Security Architecture</title>
 
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet"/>
 
-<style>
-    :root{
-        --bg-1:#0f172a;
-        --accent:#3b82f6;
-        --text:#ffffff;
-        --nav-height: 80px;
-    }
+    <style>
+        :root {
+            --bg-1: #0f172a;
+            --accent: #38bdf8; 
+            --text: #ffffff;
+            --card-bg: #1e293b; 
+        }
 
-    html, body { height: 100%; overflow: hidden; }
-    body {
-        margin: 0; padding: 0;
-        font-family: 'Inter', sans-serif;
-        background: radial-gradient(circle at 20% 30%, #1e293b 0%, var(--bg-1) 70%);
-        color: var(--text);
-    }
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            background-color: var(--bg-1);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
 
-    .slide-container {
-        width: 100vw; height: 100vh;
-        display: flex; flex-direction: column;
-        justify-content: center;
-        padding: 0 80px;
-    }
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* Reduced padding to allow cards to reach closer to edges */
+            padding: 0 40px; 
+        }
 
-    .main-title {
-        font-size: 54px; font-weight: 800;
-        margin-bottom: 15px;
-        animation: fadeIn 0.8s ease-out;
-    }
-    .title-highlight { color: var(--accent); }
+        .main-title {
+            font-size: 60px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            line-height: 1.1;
+            padding-left: 10px;
+        }
 
-    .definition-box {
-        max-width: 900px;
-        font-size: 20px;
-        line-height: 1.5;
-        color: #cbd5e1;
-        margin-bottom: 40px;
-        animation: fadeIn 0.8s ease-out 0.2s both;
-    }
+        .title-highlight { color: var(--accent); }
 
-    .purpose-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); 
-        gap: 20px;
-        max-width: 1200px;
-        animation: fadeIn 0.8s ease-out 0.4s both;
-    }
+        .definition-box {
+            /* Expanded width to match grid */
+            max-width: 100%;
+            font-size: 26px;
+            line-height: 1.4;
+            color: #e2e8f0;
+            margin-bottom: 30px;
+            padding-left: 10px;
+        }
 
-    .purpose-card {
-        background: rgba(255, 255, 255, 0.05);
-        border-left: 4px solid var(--accent);
-        padding: 24px;
-        border-radius: 0 12px 12px 0;
-        min-height: 180px;
-    }
+        .purpose-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px;
+            /* Changed from 1200px to 100% to fit screen width */
+            width: 100%;
+            max-width: 100%;
+        }
 
-    .card-title {
-        font-weight: 700;
-        font-size: 16px;
-        color: var(--accent);
-        margin-bottom: 12px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
+        .purpose-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-left: 12px solid var(--accent);
+            padding: 25px;
+            border-radius: 4px 16px 16px 4px;
+            min-height: 220px;
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
 
-    .card-text { font-size: 14px; color: #94a3b8; line-height: 1.5; }
+        .card-title {
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--accent);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+        }
 
-    .bottom-nav {
-        position: fixed; bottom: 0; left: 0; right: 0;
-        height: var(--nav-height); padding: 0 60px;
-        display: flex; justify-content: flex-end; align-items: center;
-    }
+        .tech-tag {
+            color: var(--accent);
+            font-weight: 800;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 24px; 
+            line-height: 1.2;
+        }
 
-    .nav-btn {
-        display: inline-flex; align-items: center; gap: 10px;
-        padding: 12px 28px; border-radius: 999px; text-decoration: none;
-        font-weight: 700; color: white;
-        background: var(--accent); transition: 0.3s;
-    }
+        .card-text { 
+            font-size: 25px; 
+            color: #f8fafc; 
+            line-height: 1.4; 
+        }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-</style>
+        .bottom-nav {
+            position: fixed;
+            bottom: 25px;
+            right: 40px;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 800;
+            color: #0f172a;
+            background: var(--accent);
+            font-size: 20px;
+        }
+    </style>
 </head>
 <body>
+
 <div class="slide-container">
-    <h1 class="main-title"><span class="title-highlight">Nuvoton (What we Do?):<br>
-    </span> Hardware Encryption & Logic</h1>
+    <h1 class="main-title">
+        <span class="title-highlight">Nuvoton:</span><br>
+        Hardware Encryption & Logic
+    </h1>
     
     <div class="definition-box">
-        Nuvoton provides critical silicon-level security for modern infrastructure. By embedding encryption directly into hardware logic, they ensure that sensitive keys and boot processes remain isolated from software vulnerabilities.
+        Nuvoton provides critical <strong>silicon-level security</strong>. We embed encryption directly into hardware logic to isolate sensitive keys from software attacks.
     </div>
 
     <div class="purpose-grid">
         <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-server mr-2"></i>BMC Chips</div>
+            <div class="card-title"><i class="fas fa-server mr-3"></i>BMC Chips</div>
             <div class="card-text">
-                <strong>Primary Usage:</strong> Data Center Server Management. <br><br>
-                Acts as the "service processor" for servers, allowing remote monitoring, power control, and hardware-level diagnostics even if the main OS is crashed.
+                <span class="tech-tag">"The Invisible Pilot"</span>
+                Full remote monitoring and hardware recovery even if the OS is crashed.
             </div>
         </div>
 
         <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-laptop mr-2"></i>EC Chips</div>
+            <div class="card-title"><i class="fas fa-laptop mr-3"></i>EC Chips</div>
             <div class="card-text">
-                <strong>Primary Usage:</strong> Laptop Power & Logic Control. <br><br>
-                The first chip to wake up in a PC. It manages keyboard input, battery charging, thermal fans, and verifies the BIOS integrity before the CPU starts.
+                <span class="tech-tag">"The First Responder"</span>
+                Manages power/thermals and verifies BIOS before the CPU even starts.
             </div>
         </div>
 
         <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-key mr-2"></i>TPM Chips</div>
+            <div class="card-title"><i class="fas fa-key mr-3"></i>TPM Chips</div>
             <div class="card-text">
-                <strong>Primary Purpose:</strong> Trusted Platform Module. <br><br>
-                A secure vault for cryptographic keys and passwords. It provides the "Hardware Root of Trust" required for Windows BitLocker and platform identity.
+                <span class="tech-tag">"The Digital Vault"</span>
+                Hardware Root-of-Trust for BitLocker and platform identity.
             </div>
         </div>
 
         <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-user-shield mr-2"></i>Isolated Security</div>
+            <div class="card-title"><i class="fas fa-user-shield mr-3"></i>Isolated Logic</div>
             <div class="card-text">
-                Utilizes a <strong>Trusted Integrated Processor (TIP)</strong> to run encryption logic in a separate "secure island," preventing main-processor data leaks.
+                <span class="tech-tag">"The Secure Island"</span>
+                Dedicated processor (TIP) runs security logic away from main system leaks.
             </div>
         </div>
 
         <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-bolt mr-2"></i>Crypto Circuits</div>
+            <div class="card-title"><i class="fas fa-bolt mr-3"></i>Crypto Engines</div>
             <div class="card-text">
-                Physical hardware engines for <strong>AES, RSA, and SHA</strong>. This ensures encryption happens at wire-speed without burdening the main system performance.
+                <span class="tech-tag">"Wire-Speed Security"</span>
+                Physical AES/RSA circuits that don't slow down your main processor.
             </div>
         </div>
 
         <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-atom mr-2"></i>Post-Quantum</div>
+            <div class="card-title"><i class="fas fa-atom mr-3"></i>Post-Quantum</div>
             <div class="card-text">
-                Implementing <strong>PQC algorithms</strong> at the silicon level to protect infrastructure from future quantum computer attacks.
+                <span class="tech-tag">"Future-Proofing"</span>
+                Silicon-level PQC to stop future quantum computer attacks today.
             </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <a class="nav-btn nav-next" href="nuvoton_1.html"><span>Next Slide</span><i class="fas fa-arrow-right"></i></a>
+        <a class="nav-btn" href="nuvoton_1.html">
+            <span>Next Slide</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
     </div>
 </div>
+
 </body>
 </html>
