@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=1280, height=720, initial-scale=1.0"/>
-    <title>Nuvoton: Hardware Security Architecture</title>
+    <title>Presentation Agenda: Nuvoton & OpenTitan</title>
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" crossorigin="anonymous"/>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous"/>
@@ -34,8 +34,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            /* Reduced padding to allow cards to reach closer to edges */
-            padding: 0 40px; 
+            padding: 0 80px; 
         }
 
         .main-title {
@@ -43,71 +42,72 @@
             font-weight: 800;
             margin-bottom: 10px;
             line-height: 1.1;
-            padding-left: 10px;
         }
 
         .title-highlight { color: var(--accent); }
 
         .definition-box {
-            /* Expanded width to match grid */
-            max-width: 100%;
-            font-size: 26px;
-            line-height: 1.4;
-            color: #e2e8f0;
-            margin-bottom: 30px;
-            padding-left: 10px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        .purpose-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px;
-            /* Changed from 1200px to 100% to fit screen width */
-            width: 100%;
-            max-width: 100%;
-        }
-
-        .purpose-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-left: 12px solid var(--accent);
-            padding: 25px;
-            border-radius: 4px 16px 16px 4px;
-            min-height: 220px;
-            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5);
+        /* Agenda List Styling */
+        .agenda-container {
             display: flex;
             flex-direction: column;
+            gap: 15px;
+            max-width: 1100px;
         }
 
-        .card-title {
-            font-weight: 800;
-            font-size: 22px;
-            color: var(--accent);
-            margin-bottom: 12px;
-            text-transform: uppercase;
+        .agenda-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-left: 10px solid var(--accent);
+            padding: 20px 35px;
+            border-radius: 4px 15px 15px 4px;
             display: flex;
             align-items: center;
+            transition: transform 0.2s ease;
         }
 
-        .tech-tag {
-            color: var(--accent);
+        .agenda-item:hover {
+            transform: translateX(10px);
+            border-color: var(--accent);
+        }
+
+        .agenda-number {
+            font-size: 36px;
             font-weight: 800;
-            display: block;
-            margin-bottom: 8px;
-            font-size: 24px; 
+            color: var(--accent);
+            margin-right: 30px;
+            min-width: 40px;
+        }
+
+        .agenda-content {
+            flex: 1;
+        }
+
+        .agenda-title {
+            font-size: 30px;
+            font-weight: 800;
+            color: #f8fafc;
             line-height: 1.2;
         }
 
-        .card-text { 
-            font-size: 25px; 
-            color: #f8fafc; 
-            line-height: 1.4; 
+        .agenda-sub {
+            font-size: 20px;
+            color: #94a3b8;
+            font-weight: 400;
         }
 
         .bottom-nav {
             position: fixed;
-            bottom: 30px;
-            right: 40px;
+            bottom: 40px;
+            right: 80px;
         }
 
         .nav-btn {
@@ -122,61 +122,48 @@
 
 <div class="slide-container">
     <h1 class="main-title">
-        <span class="title-highlight">Nuvoton:</span><br>
-        Hardware Encryption & Logic
+        Today's <span class="title-highlight">Presentation</span>
     </h1>
     
     <div class="definition-box">
-        Nuvoton provides critical <strong>silicon-level security</strong>. We embed encryption directly into hardware logic to isolate sensitive keys from software attacks.
+        Session Overview & Objectives
     </div>
 
-    <div class="purpose-grid">
-        <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-server mr-3"></i>BMC Chips</div>
-            <div class="card-text">
-                <span class="tech-tag">"The Invisible Pilot"</span>
-                Full remote monitoring and hardware recovery even if the OS is crashed.
+    <div class="agenda-container">
+        <div class="agenda-item">
+            <div class="agenda-number">01</div>
+            <div class="agenda-content">
+                <div class="agenda-title">Nuvoton: Strategic Implementation Partner</div>
+                <div class="agenda-sub">The vital role of silicon manufacturing in the OpenTitan ecosystem.</div>
             </div>
+            <i class="fas fa-handshake text-3xl text-blue-400 opacity-50"></i>
         </div>
 
-        <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-laptop mr-3"></i>EC Chips</div>
-            <div class="card-text">
-                <span class="tech-tag">"The First Responder"</span>
-                Manages power/thermals and verifies BIOS before the CPU even starts.
+        <div class="agenda-item">
+            <div class="agenda-number">02</div>
+            <div class="agenda-content">
+                <div class="agenda-title">What is OpenTitan?</div>
+                <div class="agenda-sub">Exploring the world's first high-quality, open-source silicon Root of Trust.</div>
             </div>
+            <i class="fas fa-microchip text-3xl text-blue-400 opacity-50"></i>
         </div>
 
-        <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-key mr-3"></i>TPM Chips</div>
-            <div class="card-text">
-                <span class="tech-tag">"The Digital Vault"</span>
-                Hardware Root-of-Trust for BitLocker and platform identity.
+        <div class="agenda-item">
+            <div class="agenda-number">03</div>
+            <div class="agenda-content">
+                <div class="agenda-title">Why Open Source for Hardware?</div>
+                <div class="agenda-sub">Transparency, security through auditability, and breaking proprietary silos.</div>
             </div>
+            <i class="fas fa-unlock-alt text-3xl text-blue-400 opacity-50"></i>
         </div>
 
-        <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-user-shield mr-3"></i>Isolated Logic</div>
-            <div class="card-text">
-                <span class="tech-tag">"The Secure Island"</span>
-                Dedicated processor (TIP) runs security logic away from main system leaks.
+        <div class="agenda-item">
+            <div class="agenda-number">04</div>
+            <div class="agenda-content">
+                <div class="agenda-title">Rust: Secure Memory in Silicon</div>
+                <div class="agenda-sub">How memory-safe languages provide a radical leap in hardware-level security.</div>
             </div>
-        </div>
-
-        <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-bolt mr-3"></i>Crypto Engines</div>
-            <div class="card-text">
-                <span class="tech-tag">"Wire-Speed Security"</span>
-                Physical AES/RSA circuits that don't slow down your main processor.
-            </div>
-        </div>
-
-        <div class="purpose-card">
-            <div class="card-title"><i class="fas fa-atom mr-3"></i>Post-Quantum</div>
-            <div class="card-text">
-                <span class="tech-tag">"Future-Proofing"</span>
-                Silicon-level PQC to stop future quantum computer attacks today.
-            </div>
+            <i class="fab fa-rust text-3xl text-blue-400 opacity-50"></i>
         </div>
     </div>
 

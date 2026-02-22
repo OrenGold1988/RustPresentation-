@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1280, height=720, initial-scale=1.0"/>
+    <title>Open Source Silicon: lowRISC GitHub</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet"/>
+
+    <style>
+        :root {
+            --bg-1: #0f172a;
+            --accent: #38bdf8; 
+            --text: #ffffff;
+            --card-bg: #1e293b; 
+            --browser-header: #334155;
+            --github-dark: #0d1117;
+        }
+
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            background-color: var(--bg-1);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 50px;
+        }
+
+        .header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .main-title {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .title-highlight { color: var(--accent); }
+
+        /* Mock Window Container */
+        .window-container {
+            flex: 1;
+            background: var(--github-dark);
+            border-radius: 12px;
+            border: 2px solid rgba(56, 189, 248, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            margin-bottom: 80px;
+        }
+
+        .window-header {
+            background: var(--browser-header);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dot-container { display: flex; gap: 8px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27c93f; }
+
+        .address-bar {
+            background: rgba(15, 23, 42, 0.6);
+            flex: 1;
+            border-radius: 6px;
+            padding: 4px 15px;
+            font-family: monospace;
+            font-size: 16px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Mock Content Area */
+        .mock-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            background: radial-gradient(circle at center, #161b22 0%, #0d1117 100%);
+        }
+
+        .gh-logo {
+            font-size: 120px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .repo-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .repo-btn {
+            background: #238636;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+
+        .repo-btn:hover {
+            background: #2ea043;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 30px;
+            left: 50px;
+            right: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-btn {
+            display: inline-flex; align-items: center; gap: 12px;
+            padding: 16px 36px; border-radius: 999px; color: #0f172a; text-decoration: none;
+            font-weight: 800; font-size: 22px; background-color: var(--accent);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-prev { background-color: #cbd5e1; }
+    </style>
+</head>
+<body>
+
+<div class="slide-container">
+    <div class="header-area">
+        <h1 class="main-title">
+            Exploring <span class="title-highlight">lowRISC</span><br>
+            The Home of OpenTitan
+        </h1>
+        <div class="text-right">
+            <div class="text-blue-400 font-bold text-xl uppercase tracking-widest">Digital Ecosystem</div>
+            <div class="text-slate-400">Collaborative Hardware Security</div>
+        </div>
+    </div>
+    
+    <div class="window-container">
+        <div class="window-header">
+            <div class="dot-container">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="address-bar">
+                <i class="fas fa-lock text-sm"></i>
+                github.com/lowRISC
+            </div>
+        </div>
+
+        <div class="mock-content">
+            <i class="fab fa-github gh-logo"></i>
+            <div class="repo-card">
+                <h2 class="text-3xl font-bold mb-4">lowRISC Organization</h2>
+                <p class="text-gray-400 text-xl mb-6">
+                    Hosted repositories for OpenTitan, the Ibex RISC-V Core, and the LLVM compiler toolchain for open hardware.
+                </p>
+                <a href="https://github.com/lowRISC" target="_blank" class="repo-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    Open Live Repository
+                </a>
+            </div>
+            <div class="mt-8 flex gap-8 text-slate-500 font-mono">
+                <span><i class="fas fa-code-branch mr-2"></i> OpenTitan</span>
+                <span><i class="fas fa-star mr-2"></i> 2.5k+ Stars</span>
+                <span><i class="fas fa-users mr-2"></i> 100+ Contributors</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a class="nav-btn nav-prev" href="ot_5.html">
+            <i class="fas fa-arrow-left"></i> Previous Slide
+        </a>
+        <a class="nav-btn" href="end.html">
+            <span>Next Slide</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
