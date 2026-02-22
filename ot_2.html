@@ -18,7 +18,7 @@
             --red-accent: #f87171;
             --text: #ffffff;
             --card-bg: rgba(30, 41, 59, 0.7); 
-            --muted: #94a3b8;
+            --muted: #e2e8f0;
         }
 
         html, body { 
@@ -37,13 +37,14 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 40px 60px; 
+            padding: 40px 60px 100px 60px; /* Extra bottom padding for nav */
             animation: fadeIn 0.8s ease-out;
         }
 
         .header {
             text-align: left;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            flex-shrink: 0;
         }
 
         .slide-title {
@@ -59,12 +60,20 @@
             text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
         }
 
+        /* Grid now fills remaining height */
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 100px;
+            gap: 40px;
             width: 100%;
-            flex-grow: 1;
+            flex: 1; 
+            min-height: 0; /* Critical for inner scrolling/flex behavior */
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .column-title {
@@ -76,32 +85,36 @@
             gap: 12px;
             text-transform: uppercase;
             letter-spacing: 0.1em;
+            flex-shrink: 0;
         }
 
+        /* Items now share height equally */
         .list-item {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            padding: 25px;
             border-radius: 12px;
             display: flex;
             gap: 20px;
-            align-items: flex-start;
+            align-items: center; /* Centered content within item */
             margin-bottom: 15px;
             transition: all 0.3s ease;
             animation: fadeInUp 0.6s ease-out both;
+            flex: 1; 
         }
 
+        .list-item:last-child { margin-bottom: 0; }
+
         .list-item:hover {
-            transform: translateY(-3px);
+            transform: scale(1.02);
             background: rgba(30, 41, 59, 0.9);
             box-shadow: 0 15px 30px rgba(0,0,0,0.4);
             border-color: rgba(255,255,255,0.2);
         }
 
-        /* Border colors for Pros vs Cons */
-        .pro-item { border-left: 6px solid var(--accent); }
-        .con-item { border-left: 6px solid var(--red-accent); }
+        .pro-item { border-left: 8px solid var(--accent); }
+        .con-item { border-left: 8px solid var(--red-accent); }
 
         /* Animation Staggering */
         .pro-item:nth-child(2) { animation-delay: 0.1s; }
@@ -112,26 +125,25 @@
         .con-item:nth-child(4) { animation-delay: 0.6s; }
 
         .icon-box {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 22px;
+            font-size: 28px;
         }
 
         .pro-icon { background: rgba(56, 189, 248, 0.15); color: var(--accent); }
         .con-icon { background: rgba(248, 113, 113, 0.15); color: var(--red-accent); }
 
-        .item-title { font-size: 22px; font-weight: 800; margin-bottom: 5px; display: block; color: #fff; }
-        .item-desc { font-size: 18px; color: var(--muted); line-height: 1.4; }
+        .item-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; display: block; color: #fff; }
+        .item-desc { font-size: 20px; color: var(--muted); line-height: 1.4; }
         
         .accent-blue { color: var(--accent); font-weight: 700; }
         .accent-red { color: var(--red-accent); font-weight: 700; }
 
-        /* Navigation Style matching slide 1 */
         .bottom-nav {
             position: fixed; 
             bottom: 30px; 
@@ -139,6 +151,7 @@
             right: 50px;
             display: flex; 
             justify-content: space-between;
+            z-index: 100;
         }
 
         .nav-btn {
